@@ -6,6 +6,9 @@ using FullSerializer;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Serialization;
+using System;
+using Newtonsoft.Json;
+using System.Text;
 
 public class playerscore : MonoBehaviour
 {
@@ -17,25 +20,35 @@ public class playerscore : MonoBehaviour
     public InputField usernametext;
     public InputField passwordtext;
 
-
     private System.Random random = new System.Random();
-    public static int playscore;
+
+    public static float playscore;
     public static string playername;
-    user user = new user();
+    user user = new user();//arthi---
 
     public static string localid;
     private string idtoken;
-
     private string getLocalId;
 
     private string Authkey = "AIzaSyBUfg4avo3uIxInDSOYDnGeiMDCSu4B6C0";
     private string databaseURL = "https://test-project-bcd07.firebaseio.com/users";
-
     public static fsSerializer serializer = new fsSerializer();
+
+    [Header("scoretxt")]
+    // score details
+    public Text slider_txt;
+    public float slider_val;
+    public Slider _slider;
+
+    public GameObject page1, page2,page3;
     void Start()
     {
-        playscore = random.Next(0,100);
-        scoretext.text = "score:" + playscore;
+        page1.SetActive(true);
+        page2.SetActive(false);
+        page3.SetActive(false);
+
+        // playscore = random.Next(0,100);
+        // scoretext.text = "score:" + playscore;
     }
 
     public void onsubmit()
@@ -48,20 +61,63 @@ public class playerscore : MonoBehaviour
     }
     private void updatescore()
     {
-        scoretext.text = "score" + user.userscore;
+        scoretext.text = "Score:" + user.userscore;
     }
   private void posttodatabase(bool emptyscore=false)
     {
-        user user = new user();
-        if(emptyscore )
+        try
         {
-            user.userscore = 0;
+
+            List<int> scr = new List<int>();
+            user user = new user();
+            if (emptyscore)
+            {
+                scr.Add(0);
+
+            }
+            else
+            {
+                RestClient.Get(url: databaseURL + "/" + localid + ".json").Then(onResolved: response =>
+                {
+                    UserDetails ud = new UserDetails();
+                    if (response != null)
+                    {
+                        ud = JsonConvert.DeserializeObject<UserDetails>(response.Text);
+                        if (ud != null)
+                            scr = ud.userscore;
+                    }
+                    if (scr.Count == 10)
+                    {
+                        scr.RemoveAt(0);
+                    }
+
+                    scr.Add(Convert.ToInt32(_slider.value));
+                    playername = usernametext.text;//---page2
+                    user.userName = playername;
+                    print("tesy---"+playername);
+                    user.localid = localid;
+                    user.userscore = scr;
+                    RestClient.Put(url: databaseURL + "/" + localid + ".json", user);
+                    Display_txt.text = "Score submitted";
+                    Invoke("stopmsg", 2f);
+                }).Catch(error =>
+                {
+                    Debug.Log(error);
+                  
+                });
+            }
+            
         }
-         RestClient.Put(url:databaseURL+"/"+localid+ ".json", user);
+        catch(Exception ex)
+        {
+
+        }
+
     }
+    
     private void retrivefromdatabase()
     {
-        RestClient.Get<user>(url:databaseURL + "/" + getLocalId + ".json").Then(onResolved:response=>
+        RestClient.Get<user>(url:databaseURL + "/" + localid + ".json").Then(onResolved:response=>
         {
             user = response;
             updatescore();
@@ -85,10 +141,12 @@ public class playerscore : MonoBehaviour
             {
                 idtoken = response.idToken;
                 localid = response.localId;
-                playername = username;
+                // playername = username;
                 posttodatabase(emptyscore:true);
-                Display_txt.text = "Welcome";
+                Display_txt.text = "Welcome "+playername;
                 Invoke("stopmsg", 1f);
+                Invoke("Shownextpage", 1f);
+
             }).Catch(error =>
             {
                 Debug.Log(error);
@@ -102,11 +160,11 @@ public class playerscore : MonoBehaviour
         RestClient.Post<SignResponse>(url:"https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=" + Authkey, bodyString: userdata).Then(
             onResolved: response =>
             {
+                print("In----");
                 idtoken = response.idToken;
                 localid = response.localId;
                 GetUsername();
-                Display_txt.text = "Welcome";
-                Invoke("stopmsg", 1f);
+                Display_txt.text = "Loading.... ";
 
             }).Catch(error =>
             {
@@ -121,46 +179,62 @@ public class playerscore : MonoBehaviour
         Display_txt.text = "";
 
     }
+    void Shownextpage()
+    {
+        page1.SetActive(false);
+        page2.SetActive(true);
+            print("page2---"+ playername);
+            usernametext.text=playername;
+
+    }
     private void GetUsername()
     {
         RestClient.Get<user>(url:databaseURL + "/" + localid + ".json").Then(onResolved: response =>
         {
             playername= response.userName;
+            print("s-------"+response.userName);
+            //playername=usernametext.text;
+            user.userName = playername;//----
+            Display_txt.text = "Welcome " + playername;
+            Invoke("stopmsg", 1f);
+            Invoke("Shownextpage", 1f);
+
         });
     }
 
     private void GetlocalId()
     {
 
-         RestClient.Get(url:databaseURL + ".json").Then(onResolved: response =>
+         RestClient.Get(url:databaseURL + "/" + localid + ".json").Then(onResolved: response =>
 
         {
             var username = getscoretext.text;
-               print("111111");
 
-            fsData userdata = fsJsonParser.Parse(response.Text);
-            Dictionary<string, user> users = null;
-            serializer.TryDeserialize(userdata,ref users);
-
-            foreach(var user in users.Values)
-            {
-                print("2222");
-
-                if (user.userName==username)
-                {
+            var userdata = JsonConvert.DeserializeObject<UserDetails>(response.Text);
+          
+               // if (userdata.userName==username)
+                //{
                     print("3333");
-                    getLocalId = user.localid;
-                    retrivefromdatabase();
-                    Display_txt.text = "welcome";
-                    Invoke("stopmsg", 1f);
-                    break;
-                }
-                else
+                    getLocalId = userdata.localid;
+                var sb = new StringBuilder();
+                if(userdata.userscore !=null && userdata.userscore.Count>0)
                 {
-                    Display_txt.text = "Incorrect username";
-                    Invoke("stopmsg", 1f);
+                    foreach( var i in userdata.userscore)
+                    {
+                        sb.Append(Convert.ToString(i));
+                        sb.Append("\n");
+
+                    }
                 }
-            }
+                scoretext.text = Convert.ToString(sb);
+                // retrivefromdatabase();
+
+            //}
+            //else
+            //{
+            //    Display_txt.text = "Incorrect username";
+            //    Invoke("stopmsg", 1f);
+            //}
         }).Catch(error =>
         {
             Debug.Log(error);
@@ -171,6 +245,28 @@ public class playerscore : MonoBehaviour
         );
 
     }
+    // adding score
+    public void _sliderfun()
+    {
+        playscore=_slider.value;
+        scoretext.text = "Score:" + playscore;
+    }
+    //
+    void Update()
+    {
+        if(Input.GetMouseButtonDown(0))
+        {
+            Display_txt.text = "";
 
+        }
+    }
+    // 
+    //public void SignPage1()
+    //{
+    //    page1.SetActive(false);
+    //    page2.SetActive(false);
+    //    page3.SetActive(true);
+    //}
 }
 //?auth=" + idtoken
+
