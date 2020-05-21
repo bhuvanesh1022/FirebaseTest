@@ -12,13 +12,21 @@ using System.Text;
 
 public class playerscore : MonoBehaviour
 {
-    public Text scoretext,Display_txt;
-    public InputField getscoretext;
+    public Text scoretext,Display_txt,Previous_scoretxt;
+    public Text getscoretext,submittxt;
+
+    //public InputField getscoretext;
     public InputField nametext;
 
+    // signin
     public InputField emailtext;
-    public InputField usernametext;
+    //public InputField usernametext;
     public InputField passwordtext;
+    //signup
+    public InputField emailtext1;
+    public InputField usernametext1;
+    public InputField passwordtext1;
+    public Text disUsername;
 
     private System.Random random = new System.Random();
 
@@ -92,13 +100,13 @@ public class playerscore : MonoBehaviour
                     }
 
                     scr.Add(Convert.ToInt32(_slider.value));
-                    playername = usernametext.text;//---page2
+                   // playername = usernametext.text;//---page2
                     user.userName = playername;
                     print("tesy---"+playername);
                     user.localid = localid;
                     user.userscore = scr;
                     RestClient.Put(url: databaseURL + "/" + localid + ".json", user);
-                    Display_txt.text = "Score submitted";
+                    submittxt.text = "Score submitted";
                     Invoke("stopmsg", 2f);
                 }).Catch(error =>
                 {
@@ -130,7 +138,7 @@ public class playerscore : MonoBehaviour
     }
     public void signUpUserButton()
     {
-        signUpuser(emailtext.text, usernametext.text, passwordtext.text);
+        signUpuser(emailtext1.text, usernametext1.text, passwordtext1.text);
     }
 
     private void signUpuser(string email, string username, string password)
@@ -141,7 +149,7 @@ public class playerscore : MonoBehaviour
             {
                 idtoken = response.idToken;
                 localid = response.localId;
-                // playername = username;
+                playername = username;
                 posttodatabase(emptyscore:true);
                 Display_txt.text = "Welcome "+playername;
                 Invoke("stopmsg", 1f);
@@ -176,15 +184,17 @@ public class playerscore : MonoBehaviour
     }
     void stopmsg()
     {
+        submittxt.text = "";
         Display_txt.text = "";
 
     }
     void Shownextpage()
     {
         page1.SetActive(false);
-        page2.SetActive(true);
+        page2.SetActive(false);
+        page3.SetActive(true);
             print("page2---"+ playername);
-            usernametext.text=playername;
+        disUsername.text="Welcome "+playername;
 
     }
     private void GetUsername()
@@ -226,7 +236,7 @@ public class playerscore : MonoBehaviour
 
                     }
                 }
-                scoretext.text = Convert.ToString(sb);
+                Previous_scoretxt.text = "Previous score:"+"\n"+Convert.ToString(sb);// getscore
                 // retrivefromdatabase();
 
             //}
@@ -254,19 +264,19 @@ public class playerscore : MonoBehaviour
     //
     void Update()
     {
-        if(Input.GetMouseButtonDown(0))
-        {
-            Display_txt.text = "";
+        //if(Input.GetMouseButtonDown(0))
+        //{
+        //    Display_txt.text = "";
 
-        }
+        //}
     }
     // 
-    //public void SignPage1()
-    //{
-    //    page1.SetActive(false);
-    //    page2.SetActive(false);
-    //    page3.SetActive(true);
-    //}
+    public void SignUpPage1()
+    {
+        page1.SetActive(false);
+        page2.SetActive(true);
+        page3.SetActive(false);
+    }
 }
 //?auth=" + idtoken
 
