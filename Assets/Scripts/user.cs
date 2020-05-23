@@ -25,3 +25,22 @@ public class UserDetails
     public List<Color> color { get; set; }
 
 }
+//public class Error
+//{
+//    public string message { get; set; }
+//    public string domain { get; set; }
+//    public string reason { get; set; }
+//}
+
+public class Error
+{
+    public int code { get; set; }
+    public string message { get; set; }
+  //  public IList<Error> errors { get; set; }
+}
+
+public class Example
+{
+    public Error error { get; set; }
+}
+
