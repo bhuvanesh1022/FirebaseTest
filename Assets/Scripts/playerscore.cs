@@ -9,6 +9,8 @@ using UnityEngine.Serialization;
 using System;
 using Newtonsoft.Json;
 using System.Text;
+using System.Reflection;
+using Newtonsoft.Json.Linq;
 
 public class playerscore : MonoBehaviour
 {
@@ -157,14 +159,20 @@ public class playerscore : MonoBehaviour
 
             }).Catch(error =>
             {
+                RequestException rr = new RequestException();
+                rr = (RequestException)error;
+                string js = rr.Response;
+                var err = JsonConvert.DeserializeObject<Example>(js);
                 Debug.Log(error);
-                Display_txt.text = "Wrong credential";
-                Invoke("stopmsg", 1f);
+                Display_txt.text = err.error.message;
+                Invoke("stopmsg", 3f);
+
             });
     }
     private void signInuser(string email, string password)
     {
         string userdata = "{\"email\":\"" + email + "\",\"password\":\"" + password + "\",\"returnSecureToken\":true}";
+
         RestClient.Post<SignResponse>(url:"https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=" + Authkey, bodyString: userdata).Then(
             onResolved: response =>
             {
@@ -176,9 +184,13 @@ public class playerscore : MonoBehaviour
 
             }).Catch(error =>
             {
+                RequestException rr = new RequestException();
+                rr = (RequestException)error;
+                string js = rr.Response;
+                var err = JsonConvert.DeserializeObject<Example>(js);
                 Debug.Log(error);
-                Display_txt.text = "Wrong credential";
-                Invoke("stopmsg",1f);
+                Display_txt.text =err.error.message;
+                Invoke("stopmsg",3f);
 
             });
     }
