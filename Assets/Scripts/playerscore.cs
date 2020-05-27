@@ -14,8 +14,8 @@ using Newtonsoft.Json.Linq;
 
 public class playerscore : MonoBehaviour
 {
-    public Text scoretext,Display_txt,Previous_scoretxt;
-    public Text getscoretext,submittxt;
+    public Text scoretext, Display_txt, Previous_scoretxt;
+    public Text getscoretext, submittxt;
 
     //public InputField getscoretext;
     public InputField nametext;
@@ -50,7 +50,7 @@ public class playerscore : MonoBehaviour
     public float slider_val;
     public Slider _slider;
 
-    public GameObject page1, page2,page3;
+    public GameObject page1, page2, page3;
     void Start()
     {
         page1.SetActive(true);
@@ -63,7 +63,7 @@ public class playerscore : MonoBehaviour
 
     public void onsubmit()
     {
-        posttodatabase();
+        posttodatabase(true);
     }
     public void ongetscore()
     {
@@ -73,66 +73,69 @@ public class playerscore : MonoBehaviour
     {
         scoretext.text = "Score:" + user.userscore;
     }
-  private void posttodatabase(bool emptyscore=false)
+    private void posttodatabase(bool isScoreSubmit)
     {
         try
         {
 
             List<int> scr = new List<int>();
             user user = new user();
-            if (emptyscore)
-            {
-                scr.Add(0);
 
-            }
-            else
+            RestClient.Get(url: databaseURL + "/" + localid + ".json").Then(onResolved: response =>
             {
-                RestClient.Get(url: databaseURL + "/" + localid + ".json").Then(onResolved: response =>
+                UserDetails ud = new UserDetails();
+                if (response != null)
                 {
-                    UserDetails ud = new UserDetails();
-                    if (response != null)
-                    {
-                        ud = JsonConvert.DeserializeObject<UserDetails>(response.Text);
-                        if (ud != null)
-                            scr = ud.userscore;
-                    }
-                    if (scr.Count == 10)
+                    ud = JsonConvert.DeserializeObject<UserDetails>(response.Text);
+                    if (ud != null && ud.userscore!=null)
+                        scr = ud.userscore;
+                }
+                
+
+                if (isScoreSubmit)
+                {
+                    if (scr!=null && scr.Count == 10)
                     {
                         scr.RemoveAt(0);
                     }
-
                     scr.Add(Convert.ToInt32(_slider.value));
-                   // playername = usernametext.text;//---page2
+                }
+                    // playername = usernametext.text;//---page2
                     user.userName = playername;
-                    print("tesy---"+playername);
-                    user.localid = localid;
-                    user.userscore = scr;
-                    RestClient.Put(url: databaseURL + "/" + localid + ".json", user);
-                    submittxt.text = "Score submitted";
-                    Invoke("stopmsg", 2f);
-                }).Catch(error =>
+                print("tesy---" + playername);
+                user.localid = localid;
+                user.userscore = scr;
+                RestClient.Put(url: databaseURL + "/" + localid + ".json", user);
+
+                if (isScoreSubmit)
                 {
-                    Debug.Log(error);
-                  
-                });
-            }
-            
+                    submittxt.text = "Score submitted";
+
+                    Invoke("stopmsg", 2f);
+                }
+            }).Catch(error =>
+            {
+                Debug.Log(error);
+
+            });
+
+
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
 
         }
 
     }
-    
+
     private void retrivefromdatabase()
     {
-        RestClient.Get<user>(url:databaseURL + "/" + localid + ".json").Then(onResolved:response=>
-        {
-            user = response;
-            updatescore();
-            print("44444");
-        });
+        RestClient.Get<user>(url: databaseURL + "/" + localid + ".json").Then(onResolved: response =>
+          {
+              user = response;
+              updatescore();
+              print("44444");
+          });
     }
     public void signInUserButton()
     {
@@ -145,17 +148,43 @@ public class playerscore : MonoBehaviour
 
     private void signUpuser(string email, string username, string password)
     {
-         string userdata = "{\"email\":\"" + email + "\",\"password\":\"" + password + "\",\"returnSecureToken\":true}";
-        RestClient.Post<SignResponse>(url:"https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=" + Authkey, bodyString:userdata).Then(
-            onResolved:response =>  
+        string userdata = "{\"email\":\"" + email + "\",\"password\":\"" + password + "\",\"returnSecureToken\":true}";
+        RestClient.Post<SignResponse>(url: "https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=" + Authkey, bodyString: userdata).Then(
+            onResolved: response =>
+             {
+                 idtoken = response.idToken;
+                 localid = response.localId;
+                 playername = username;
+                 posttodatabase( false);
+                 Display_txt.text = "Welcome " + playername;
+                 Invoke("stopmsg", 1f);
+                 Invoke("Shownextpage", 1f);
+
+             }).Catch(error =>
+             {
+                 RequestException rr = new RequestException();
+                 rr = (RequestException)error;
+                 string js = rr.Response;
+                 var err = JsonConvert.DeserializeObject<Example>(js);
+                 Debug.Log(error);
+                 Display_txt.text = err.error.message;
+                 Invoke("stopmsg", 3f);
+
+             });
+    }
+    private void signInuser(string email, string password)
+    {
+        string userdata = "{\"email\":\"" + email + "\",\"password\":\"" + password + "\",\"returnSecureToken\":true}";
+
+        RestClient.Post<SignResponse>(url: "https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=" + Authkey, bodyString: userdata).Then(
+            onResolved: response =>
             {
+                print("In----");
                 idtoken = response.idToken;
                 localid = response.localId;
-                playername = username;
-                posttodatabase(emptyscore:true);
-                Display_txt.text = "Welcome "+playername;
-                Invoke("stopmsg", 1f);
-                Invoke("Shownextpage", 1f);
+                Display_txt.text = "Loading.... ";
+                GetUsername();
+
 
             }).Catch(error =>
             {
@@ -166,31 +195,6 @@ public class playerscore : MonoBehaviour
                 Debug.Log(error);
                 Display_txt.text = err.error.message;
                 Invoke("stopmsg", 3f);
-
-            });
-    }
-    private void signInuser(string email, string password)
-    {
-        string userdata = "{\"email\":\"" + email + "\",\"password\":\"" + password + "\",\"returnSecureToken\":true}";
-
-        RestClient.Post<SignResponse>(url:"https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=" + Authkey, bodyString: userdata).Then(
-            onResolved: response =>
-            {
-                print("In----");
-                idtoken = response.idToken;
-                localid = response.localId;
-                GetUsername();
-                Display_txt.text = "Loading.... ";
-
-            }).Catch(error =>
-            {
-                RequestException rr = new RequestException();
-                rr = (RequestException)error;
-                string js = rr.Response;
-                var err = JsonConvert.DeserializeObject<Example>(js);
-                Debug.Log(error);
-                Display_txt.text =err.error.message;
-                Invoke("stopmsg",3f);
 
             });
     }
@@ -205,51 +209,63 @@ public class playerscore : MonoBehaviour
         page1.SetActive(false);
         page2.SetActive(false);
         page3.SetActive(true);
-            print("page2---"+ playername);
-        disUsername.text="Welcome "+playername;
+        print("page2---" + playername);
+        disUsername.text = "Welcome " + playername;
 
     }
     private void GetUsername()
     {
-        RestClient.Get<user>(url:databaseURL + "/" + localid + ".json").Then(onResolved: response =>
-        {
-            playername= response.userName;
-            print("s-------"+response.userName);
-            //playername=usernametext.text;
+        print("1----");
+        RestClient.Get<user>(url: databaseURL + "/" + localid + ".json").Then(onResolved: response =>
+         {
+             print("getusername----");
+             playername = response.userName;
+             print("s-------" + response.userName);
+            // playername=usernametext.text;
             user.userName = playername;//----
             Display_txt.text = "Welcome " + playername;
-            Invoke("stopmsg", 1f);
-            Invoke("Shownextpage", 1f);
+             Invoke("stopmsg", 1f);
+             Invoke("Shownextpage", 1f);
 
-        });
+         }).Catch(error =>
+         {
+             RequestException rr = new RequestException();
+             rr = (RequestException)error;
+             string js = rr.Response;
+             var err = JsonConvert.DeserializeObject<Example>(js);
+             Debug.Log(error);
+             Display_txt.text = err.error.message;
+             Invoke("stopmsg", 3f);
+
+         });
     }
 
     private void GetlocalId()
     {
 
-         RestClient.Get(url:databaseURL + "/" + localid + ".json").Then(onResolved: response =>
+        RestClient.Get(url: databaseURL + "/" + localid + ".json").Then(onResolved: response =>
 
         {
             var username = getscoretext.text;
 
             var userdata = JsonConvert.DeserializeObject<UserDetails>(response.Text);
-          
-               // if (userdata.userName==username)
-                //{
-                    print("3333");
-                    getLocalId = userdata.localid;
-                var sb = new StringBuilder();
-                if(userdata.userscore !=null && userdata.userscore.Count>0)
-                {
-                    foreach( var i in userdata.userscore)
-                    {
-                        sb.Append(Convert.ToString(i));
-                        sb.Append("\n");
 
-                    }
+            // if (userdata.userName==username)
+            //{
+            print("3333");
+            getLocalId = userdata.localid;
+            var sb = new StringBuilder();
+            if (userdata.userscore != null && userdata.userscore.Count > 0)
+            {
+                foreach (var i in userdata.userscore)
+                {
+                    sb.Append(Convert.ToString(i));
+                    sb.Append("\n");
+
                 }
-                Previous_scoretxt.text = "Previous score:"+"\n"+Convert.ToString(sb);// getscore
-                // retrivefromdatabase();
+            }
+            Previous_scoretxt.text = "Previous score:" + "\n" + Convert.ToString(sb);// getscore
+                                                                                     // retrivefromdatabase();
 
             //}
             //else
@@ -264,13 +280,13 @@ public class playerscore : MonoBehaviour
             Invoke("stopmsg", 1f);
 
         }
-        );
+       );
 
     }
     // adding score
     public void _sliderfun()
     {
-        playscore=_slider.value;
+        playscore = _slider.value;
         scoretext.text = "Score:" + playscore;
     }
     //
