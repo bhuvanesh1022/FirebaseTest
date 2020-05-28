@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Proyecto26;
 using FullSerializer;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.Serialization;
 using System;
@@ -14,6 +15,9 @@ using Newtonsoft.Json.Linq;
 
 public class playerscore : MonoBehaviour
 {
+    public static playerscore _pScore;
+
+    public int gameSceneId;
     public Text scoretext, Display_txt, Previous_scoretxt;
     public Text getscoretext, submittxt;
 
@@ -51,6 +55,23 @@ public class playerscore : MonoBehaviour
     public Slider _slider;
 
     public GameObject page1, page2, page3;
+
+    private void OnEnable()
+    {
+        if (playerscore._pScore == null)
+        {
+            playerscore._pScore = this;
+        }
+        else
+        {
+            if (playerscore._pScore != this)
+            {
+                Destroy(gameObject);
+            }
+        }
+        DontDestroyOnLoad(gameObject);
+    }
+
     void Start()
     {
         page1.SetActive(true);
@@ -205,10 +226,12 @@ public class playerscore : MonoBehaviour
 
     }
     void Shownextpage()
-    {
+    {                                                                       //edit by Bhuvanesh
         page1.SetActive(false);
         page2.SetActive(false);
         page3.SetActive(true);
+        //SceneManager.LoadScene(gameSceneId);
+                                                                            //edit by Bhuvanesh
         print("page2---" + playername);
         disUsername.text = "Welcome " + playername;
 

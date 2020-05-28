@@ -6,9 +6,23 @@ using UnityEngine;
 public class user 
 {
     public string userName;
-     public List<int> userscore;
+    public List<int> userscore;
     public string localid;
-   // public Color color = new Color();
+    // public Color color = new Color();
+
+                                                        // edit by Bhuvanesh
+    public List<int> Strategy;
+    public List<int> Ethics;
+    public List<int> Silliness;
+    public List<int> SelfControl;
+    public List<int> Kindness;
+    public List<int> Risk;
+    public List<int> Courage;
+    public List<int> Practicality;
+    public List<int> Responsibility;
+
+                                                        // edit by Bhuvanesh
+
     public user()
     {
         userName = playerscore.playername;
