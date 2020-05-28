@@ -308,3 +308,4 @@ public class playerscore : MonoBehaviour
 }
 //?auth=" + idtoken
 
+   // ".write": "auth.uid !=null"
