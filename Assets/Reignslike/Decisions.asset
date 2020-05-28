@@ -1,0 +1,562 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09cd49e86d4ad8945b84e4247a87adf7, type: 3}
+  m_Name: Decisions
+  m_EditorClassIdentifier: 
+  decisions:
+  - decisionText: 'This JUST in: Ice-cream causes cavities.'
+    speakerName: News & Nonsense Reporter
+    choices:
+    - choiceText: Ban ice-cream
+      effects:
+      - property:
+          name: Strategy
+          type: 2
+        amount: 1
+        consequenceText: 
+      - property:
+          name: Ethics
+          type: 2
+        amount: -1
+        consequenceText: 
+      - property:
+          name: Health
+          type: 1
+        amount: 1
+        consequenceText: This makes doctors very happy.
+      - property:
+          name: Fun
+          type: 1
+        amount: -2
+        consequenceText: Until they realise that they can't have ice-cream too.
+    - choiceText: Ban cavities
+      effects:
+      - property:
+          name: Silliness
+          type: 2
+        amount: 1
+        consequenceText: 
+      - property:
+          name: Fun
+          type: 1
+        amount: 1
+        consequenceText: The town has a great Sunday blacking the word c*vities out
+          of textbooks.
+      - property:
+          name: Learning
+          type: 1
+        amount: -1
+        consequenceText: But this doesn't make the teachers very happy.
+      - property:
+          name: Health
+          type: 1
+        amount: -1
+        consequenceText: And somehow doesn't actually make c*vities go away!
+    requirements: []
+  - decisionText: If we melted the ice-caps we would be able to sell more ice-cubes.
+    speakerName: Trade & Money Man
+    choices:
+    - choiceText: Build an enormous heat ray
+      effects:
+      - property:
+          name: Strategy
+          type: 2
+        amount: 1
+        consequenceText: 
+      - property:
+          name: Ethics
+          type: 2
+        amount: -1
+        consequenceText: 
+      - property:
+          name: Fun
+          type: 1
+        amount: 1
+        consequenceText: Folks love tanning under the heat ray...
+      - property:
+          name: Fun
+          type: 1
+        amount: -2
+        consequenceText: ...until global warming makes it rain for a month straight.
+      - property:
+          name: Wealth
+          type: 1
+        amount: 1
+        consequenceText: At least you made lots of money!
+      - property:
+          name: Health
+          type: 1
+        amount: -1
+        consequenceText: Too bad so many folks died in flooded cities and can't spend
+          it.
+    - choiceText: You'll have your drinks at room temperature
+      effects:
+      - property:
+          name: Self-control
+          type: 2
+        amount: 1
+        consequenceText: 
+      - property:
+          name: Ethics
+          type: 2
+        amount: 1
+        consequenceText: 
+      - property:
+          name: Fun
+          type: 1
+        amount: 1
+        consequenceText: It turns out that polar bears are really fun to have around.
+      - property:
+          name: Health
+          type: 1
+        amount: 1
+        consequenceText: And since nobody drowns in flooded cities...
+      - property:
+          name: Wealth
+          type: 1
+        amount: 1
+        consequenceText: ...They spend their money on polar bear chic!
+    requirements: []
+  - decisionText: The town up North is throwing a party! Their perimeter is unguarded.
+    speakerName: Chief Enforcement Officer
+    choices:
+    - choiceText: Send cake
+      effects:
+      - property:
+          name: Kindness
+          type: 2
+        amount: 1
+        consequenceText: 
+      - property:
+          name: Silliness
+          type: 2
+        amount: 1
+        consequenceText: 
+      - property:
+          name: Fun
+          type: 1
+        amount: 2
+        consequenceText: They love the cake and invite you over.
+      - property:
+          name: Learning
+          type: 1
+        amount: 1
+        consequenceText: The more you learn about them, the more you can personalise
+          the next cake you bake.
+      - property:
+          name: Wealth
+          type: 1
+        amount: 1
+        consequenceText: ...And then they love your cake so much that they promise
+          to buy all their cake *only* from you!
+    - choiceText: Send the army
+      effects:
+      - property:
+          name: Strategy
+          type: 2
+        amount: 1
+        consequenceText: 
+      - property:
+          name: Kindness
+          type: 2
+        amount: -1
+        consequenceText: 
+      - property:
+          name: Wealth
+          type: 1
+        amount: 1
+        consequenceText: You make some money...
+      - property:
+          name: Fun
+          type: 1
+        amount: -1
+        consequenceText: ...but you don't make any friends.
+      - property:
+          name: Health
+          type: 1
+        amount: -2
+        consequenceText: Especially since they're all dead.
+    requirements: []
+  - decisionText: Let's make shoes with wheels a <i>thing</i>.
+    speakerName: Principal Party Planner
+    choices:
+    - choiceText: You're on the right track!
+      effects:
+      - property:
+          name: Silliness
+          type: 2
+        amount: 1
+        consequenceText: 
+      - property:
+          name: Fun
+          type: 1
+        amount: 1
+        consequenceText: The shoes are a big hit at parties.
+      - property:
+          name: Health
+          type: 1
+        amount: -1
+        consequenceText: In fact, you keep hitting other people when you roll into
+          them.
+    - choiceText: Let's make <i>hovercrafts</i> a thing
+      effects:
+      - property:
+          name: Silliness
+          type: 2
+        amount: 1
+        consequenceText: 
+      - property:
+          name: Risk
+          type: 2
+        amount: 1
+        consequenceText: 
+      - property:
+          name: Learning
+          type: 1
+        amount: 1
+        consequenceText: Everybody starts checking out books on hovercrafts.
+      - property:
+          name: Fun
+          type: 1
+        amount: 1
+        consequenceText: Suddenly, physics is fun again!
+      - property:
+          name: Wealth
+          type: 1
+        amount: 1
+        consequenceText: And all that research leads to some really cool tech and
+          innovation!
+    requirements: []
+  - decisionText: Data, you hear me? Data shows that students who practice schoolwork,
+      yes schoolwork, after school do better in frequent tests.
+    speakerName: 'Leader: Cult of Curriculum'
+    choices:
+    - choiceText: Give out more homework
+      effects:
+      - property:
+          name: Practicality
+          type: 2
+        amount: 1
+        consequenceText: 
+      - property:
+          name: Courage
+          type: 2
+        amount: 1
+        consequenceText: 
+      - property:
+          name: Learning
+          type: 1
+        amount: 1
+        consequenceText: Everybody learns how to spell "fun."
+      - property:
+          name: Fun
+          type: 1
+        amount: -1
+        consequenceText: But nobody has it.
+    - choiceText: Have less tests
+      effects:
+      - property:
+          name: Practicality
+          type: 2
+        amount: -1
+        consequenceText: 
+      - property:
+          name: Silliness
+          type: 2
+        amount: 1
+        consequenceText: 
+      - property:
+          name: Fun
+          type: 1
+        amount: 1
+        consequenceText: Everybody learns how little they're learning less frequently.
+    requirements: []
+  - decisionText: Some stunning spiders have been spotted in our tip-top town!
+    speakerName: Supreme Scientist
+    choices:
+    - choiceText: Study the spiders
+      effects:
+      - property:
+          name: Risk
+          type: 2
+        amount: 1
+        consequenceText: 
+      - property:
+          name: Courage
+          type: 2
+        amount: 1
+        consequenceText: 
+      - property:
+          name: Wealth
+          type: 1
+        amount: -1
+        consequenceText: It's expensive to set up spider-safe environments.
+      - property:
+          name: Learning
+          type: 1
+        amount: 1
+        consequenceText: But you learn all about the phylum arthropoda and the class
+          arachnida.
+      - property:
+          name: Fun
+          type: 1
+        amount: 1
+        consequenceText: Including the facts that some spiders look like rainbows
+          and some are super hairy...
+      - property:
+          name: Fun
+          type: 1
+        amount: 1
+        consequenceText: ...And that your teacher doesn't like either!
+    - choiceText: EW
+      effects:
+      - property:
+          name: Risk
+          type: 2
+        amount: -1
+        consequenceText: 
+      - property:
+          name: Health
+          type: 1
+        amount: 1
+        consequenceText: Well, nobody gets bitten by spiders.
+      - property:
+          name: Fun
+          type: 1
+        amount: -1
+        consequenceText: That means there are no superheroes in town.
+      - property:
+          name: Fun
+          type: 1
+        amount: 1
+        consequenceText: ...But it also means there are no spiders, so you'll take
+          it.
+    requirements: []
+  - decisionText: There is an entire world of fusion food out there and I would like
+      to venture forth to discover it!
+    speakerName: Explorer at Large
+    choices:
+    - choiceText: Too risky
+      effects:
+      - property:
+          name: Risk
+          type: 2
+        amount: -1
+        consequenceText: 
+      - property:
+          name: Self-control
+          type: 2
+        amount: 1
+        consequenceText: 
+      - property:
+          name: Wealth
+          type: 1
+        amount: -1
+        consequenceText: Over time, people get bored of eating the same things and
+          stop eating out.
+      - property:
+          name: Fun
+          type: 1
+        amount: -1
+        consequenceText: You never get to discover some of the coolest foods ever.
+      - property:
+          name: Fun
+          type: 1
+        amount: 1
+        consequenceText: But then you never have to suffer some of the weirdest foods
+          either.
+      - property:
+          name: Learning
+          type: 1
+        amount: -1
+        consequenceText: And you really lose when it comes to learning how to tell
+          the difference.
+    - choiceText: Have fun!
+      effects:
+      - property:
+          name: Risk
+          type: 2
+        amount: 1
+        consequenceText: 
+      - property:
+          name: Fun
+          type: 1
+        amount: 2
+        consequenceText: Everyone brings their favourite food to the office and mixes
+          them together. It's a rainbow explosion!
+      - property:
+          name: Learning
+          type: 1
+        amount: 1
+        consequenceText: You learn that ice-cream goes with wasabi but does not go
+          with onions.
+      - property:
+          name: Wealth
+          type: 1
+        amount: 1
+        consequenceText: The town chefs are thrilled that they now have so many new
+          recipes to make.
+    requirements: []
+  - decisionText: <b>BREAKING NEWS:</b> Animal shelters are full and they can't house
+      any more lost dogs.
+    speakerName: News & Nonsense Reporter
+    choices:
+    - choiceText: Puppies for everyone!
+      effects:
+      - property:
+          name: Silliness
+          type: 2
+        amount: 1
+        consequenceText: 
+      - property:
+          name: Practicality
+          type: 2
+        amount: -1
+        consequenceText: 
+      - property:
+          name: Wealth
+          type: 1
+        amount: -1
+        consequenceText: It costs a bit to get the puppies to their people...
+      - property:
+          name: Fun
+          type: 1
+        amount: 1
+        consequenceText: But BOOP! Now everyone gets a puppy's nose!
+      - property:
+          name: Health
+          type: 1
+        amount: 1
+        consequenceText: And a world filled with happy people is a world filled with
+          healthy people!
+    - choiceText: Send the shelters money
+      effects:
+      - property:
+          name: Practicality
+          type: 2
+        amount: 1
+        consequenceText: 
+      - property:
+          name: Strategy
+          type: 2
+        amount: 1
+        consequenceText: 
+      - property:
+          name: Wealth
+          type: 1
+        amount: -2
+        consequenceText: Puppies are small but they sure do eat a lot.
+    requirements: []
+  - decisionText: i'm like really bummed out
+    speakerName: The Queen
+    choices:
+    - choiceText: Throw a party
+      effects:
+      - property:
+          name: Kindness
+          type: 2
+        amount: 1
+        consequenceText: 
+      - property:
+          name: Silliness
+          type: 2
+        amount: 1
+        consequenceText: 
+      - property:
+          name: Wealth
+          type: 1
+        amount: -1
+        consequenceText: This costs a lot of money.
+      - property:
+          name: Fun
+          type: 1
+        amount: 1
+        consequenceText: But who can put a price on fun?!
+      - property:
+          name: Wealth
+          type: 1
+        amount: -1
+        consequenceText: Turns out, the shops can.
+    - choiceText: Here's a hug
+      effects:
+      - property:
+          name: Kindness
+          type: 2
+        amount: 1
+        consequenceText: 
+      - property:
+          name: Health
+          type: 1
+        amount: -2
+        consequenceText: Hugs are good because they soothe the parasympathetic nervous
+          system and induce calm.
+      - property:
+          name: Wealth
+          type: 1
+        amount: 1
+        consequenceText: And a healthy Queen is a wealthy Queen.
+    requirements: []
+  - decisionText: There's a virulent virus going around! Drained doctors are careworn
+      from all their caregiving.
+    speakerName: Supreme Scientist
+    choices:
+    - choiceText: Pay volunteer doctors extra
+      effects:
+      - property:
+          name: Strategy
+          type: 2
+        amount: 1
+        consequenceText: 
+      - property:
+          name: Responsibility
+          type: 2
+        amount: 1
+        consequenceText: 
+      - property:
+          name: Wealth
+          type: 1
+        amount: -1
+        consequenceText: You have to dip into your coffers.
+      - property:
+          name: Health
+          type: 1
+        amount: 2
+        consequenceText: But at least you aren't dipping into coffins.
+    - choiceText: Clap for caregivers
+      effects:
+      - property:
+          name: Silliness
+          type: 2
+        amount: 1
+        consequenceText: 
+      - property:
+          name: Kindness
+          type: 2
+        amount: 1
+        consequenceText: 
+      - property:
+          name: Fun
+          type: 1
+        amount: 1
+        consequenceText: You have a lot of fun making a lot of noise.
+      - property:
+          name: Health
+          type: 1
+        amount: 1
+        consequenceText: And it makes doctors feel really good!
+      - property:
+          name: Health
+          type: 1
+        amount: -1
+        consequenceText: Until it gives them a headache that they don't have the
+          money to cure.
+    requirements: []
