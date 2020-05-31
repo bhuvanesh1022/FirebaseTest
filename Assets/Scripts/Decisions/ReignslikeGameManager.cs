@@ -4,14 +4,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
+using System.Text;
+using System;
 
 public class ReignslikeGameManager : MonoBehaviour {
+
+    public playerscore scoreObj;
+    public user u;
+    public string localID;
+
 	[SerializeField] DecisionsHolder decHolder;
 	[SerializeField] int turnsTotal, startingStat, minStat, maxStat;
 	[SerializeField] List<string> statNames;
 	[SerializeField] string endgameMessage = "THAT'S ALL FOLKS";
 	[SerializeField] DecisionDisplay decisionDisplay;
-	[SerializeField] TMP_Text statusText, outcomeText;
+	[SerializeField] TMP_Text welcomeText, statusText, outcomeText, lastTraitsText;
 	[SerializeField] TextButton startButton, resetButton;
 	[SerializeField] List<GameObject> showDuringGameplay, showDuringEndgame;
 
@@ -26,15 +33,21 @@ public class ReignslikeGameManager : MonoBehaviour {
 	public SessionEndEvent OnSessionEnded;
 
 	private void Awake() {
+        scoreObj = GameObject.FindWithTag("GameController").GetComponent<playerscore>();
 		poolAvailable = new List<Decision>(decHolder.decisions);
 		decisionDisplay.OnDecisionTaken += OnDecisionTaken;
 		decisionDisplay.OnDecisionEnd += NextDecision;
 		if (startButton) startButton.OnButtonPressed += _ => NextDecision();
-		if (resetButton) resetButton.OnButtonPressed += _ => SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-		statNames.ForEach(statName => statMap[statName] = startingStat);
+        if (resetButton) resetButton.OnButtonPressed += _ => ReloadApp();
+        statNames.ForEach(statName => statMap[statName] = startingStat);
 	}
 
 	private void Start() {
+        u = scoreObj.user;
+        welcomeText.text = "<line-height=150%>" + "Hi! " + u.userName.ToUpper();
+        lastTraitsText.text += "\n" + scoreObj.lastTraits;
+
+        //localID = scoreObj.localid;
 		turnsLeft = turnsTotal;
 		Endgame(false);
 		UpdateStatus();
@@ -42,21 +55,82 @@ public class ReignslikeGameManager : MonoBehaviour {
 		else NextDecision();
 	}
 
-	void UpdateStatus() {
+    void ReloadApp()
+    {
+        Destroy(scoreObj.gameObject);
+        SceneManager.LoadScene(0);
+    }
+
+    void UpdateStatus() {
 		string newText = "<line-height=150%>" + (turnsLeft > 0 ? "Turns left: " + turnsLeft : endgameMessage);
 		foreach (var kvp in statMap) newText += string.Format("\n<line-height=100%>{0}: {1}", kvp.Key, kvp.Value.ToString());
 		statusText.text = newText;
 	}
 
-	void NextDecision() {
+    void UpdateTraits()
+    {
+        foreach (var kvp in traitMap)
+        {
+            Debug.Log(kvp.Key);
+
+            switch (kvp.Key)
+            {
+                case "Courage":
+                    scoreObj.c1 = kvp.Value;
+                    break;
+
+                case "Ethics":
+                    scoreObj.e1 = kvp.Value;
+                    break;
+
+                case "Kindness":
+                    scoreObj.k1 = kvp.Value;
+                    break;
+
+                case "Practicality":
+                    scoreObj.p1 = kvp.Value;
+                    break;
+
+                case "Responsibility":
+                    scoreObj.r1 = kvp.Value;
+                    break;
+
+                case "Risk":
+                    scoreObj.r2 = kvp.Value;
+                    break;
+
+                case "Self-control":
+                    scoreObj.s1 = kvp.Value;
+                    break;
+
+                case "Silliness":
+                    scoreObj.s2 = kvp.Value;
+                    break;
+
+                case "Strategy":
+                    scoreObj.s3 = kvp.Value;
+                    break;
+
+                default:
+                    break;
+            }
+        }
+    }
+
+    void NextDecision() 
+    {
+        lastTraitsText.enabled = false;
+
 		if (!decisionDisplay.gameObject.activeSelf) {
 			if (startButton) startButton.gameObject.SetActive(false);
 			decisionDisplay.gameObject.SetActive(true);
 		}
 
 		UpdateStatus();
-		if (turnsLeft <= 0) {
-			Endgame(true);
+		if (turnsLeft <= 0) 
+        {
+            scoreObj.onsubmit();
+            Endgame(true);
 			return;
 		}
 
@@ -92,7 +166,7 @@ public class ReignslikeGameManager : MonoBehaviour {
 		poolLocked.AddRange(newlyAvailable);
 		newlyLocked.ForEach(dec => poolAvailable.Remove(dec));
 
-		Decision curDec = poolAvailable[Random.Range(0, poolAvailable.Count)];
+		Decision curDec = poolAvailable[UnityEngine.Random.Range(0, poolAvailable.Count)];
 		poolUsed.Add(curDec);
 		poolAvailable.Remove(curDec);
 		decisionDisplay.ShowDecision(curDec);
@@ -117,13 +191,19 @@ public class ReignslikeGameManager : MonoBehaviour {
 		turnsLeft--;
 	}
 
-	void Endgame(bool show) {
+	void Endgame(bool show) 
+    {
 		showDuringEndgame.ForEach(go => go.SetActive(show));
 		showDuringGameplay.ForEach(go => go.SetActive(!show));
 		if (show) {
 			string newText = string.Empty;
-			foreach (var kvp in traitMap) newText += (string.IsNullOrEmpty(newText) ? "" : "\n") + string.Format("{0}: {1}", kvp.Key, kvp.Value.ToString());
-			outcomeText.text = newText;
+			foreach (var kvp in traitMap)
+            {
+                newText += (string.IsNullOrEmpty(newText) ? "" : "\n") + string.Format("{0}: {1}", kvp.Key, kvp.Value.ToString());
+            }
+            newText += "\n" + "Traits Submitted.";
+            UpdateTraits();
+            outcomeText.text = newText;
 		}
 		OnSessionEnded?.Invoke(traitMap);
 	}

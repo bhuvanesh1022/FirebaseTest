@@ -11,16 +11,15 @@ public class user
     // public Color color = new Color();
 
                                                         // edit by Bhuvanesh
-    public List<int> Strategy;
-    public List<int> Ethics;
-    public List<int> Silliness;
-    public List<int> SelfControl;
-    public List<int> Kindness;
-    public List<int> Risk;
     public List<int> Courage;
+    public List<int> Ethics;
+    public List<int> Kindness;
     public List<int> Practicality;
     public List<int> Responsibility;
-
+    public List<int> Risk;
+    public List<int> SelfControl;
+    public List<int> Silliness;
+    public List<int> Strategy;
                                                         // edit by Bhuvanesh
 
     public user()
@@ -37,6 +36,16 @@ public class UserDetails
     public string localid { get; set; }
     public List<int> userscore { get; set; }
     public List<Color> color { get; set; }
+
+    public List<int> Courage { get; set; }
+    public List<int> Ethics { get; set; }
+    public List<int> Kindness { get; set; }
+    public List<int> Practicality { get; set; }
+    public List<int> Responsibility { get; set; }
+    public List<int> Risk { get; set; }
+    public List<int> SelfControl { get; set; }
+    public List<int> Silliness { get; set; }
+    public List<int> Strategy { get; set; }
 
 }
 //public class Error
