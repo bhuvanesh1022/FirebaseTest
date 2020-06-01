@@ -560,3 +560,325 @@ MonoBehaviour:
         consequenceText: Until it gives them a headache that they don't have the
           money to cure.
     requirements: []
+  - decisionText: OMG the chopra chaps are only like the best band ever!!!!! i want
+      you to host the biggest concert i don't care what it costs.
+    speakerName: The Queen
+    choices:
+    - choiceText: Throw an enormous concert
+      effects:
+      - property:
+          name: Silliness
+          type: 2
+        amount: 1
+        consequenceText: 
+      - property:
+          name: Self-control
+          type: 2
+        amount: -1
+        consequenceText: 
+      - property:
+          name: Wealth
+          type: 1
+        amount: -2
+        consequenceText: All of those balloons are expensive and don't last for a
+          long time.
+      - property:
+          name: Fun
+          type: 1
+        amount: 2
+        consequenceText: But the memories last forever!
+    - choiceText: Throw a regular-sized concert
+      effects:
+      - property:
+          name: Practical
+          type: 2
+        amount: 1
+        consequenceText: 
+      - property:
+          name: Self-control
+          type: 2
+        amount: 1
+        consequenceText: 
+      - property:
+          name: Wealth
+          type: 1
+        amount: -1
+        consequenceText: You spend a reasonable amount of money on the concert.
+      - property:
+          name: Fun
+          type: 1
+        amount: 1
+        consequenceText: Which results in a reasonable amount of fun.
+    requirements: []
+  - decisionText: A-rated movies have gratuitous violence and gore. Theatres shouldn't
+      allow children in unsupervised.
+    speakerName: Chief Enforcement Officer
+    choices:
+    - choiceText: You're right
+      effects:
+      - property:
+          name: Responsibility
+          type: 2
+        amount: 1
+        consequenceText: 
+      - property:
+          name: Self-control
+          type: 2
+        amount: 1
+        consequenceText: 
+      - property:
+          name: Fun
+          type: 1
+        amount: -1
+        consequenceText: You miss out on some movies the grown ups are talking about.
+      - property:
+          name: Health
+          type: 1
+        amount: 1
+        consequenceText: But you don't have nightmares about weird and scary stuff,
+          and you can always catch up on the movies later.
+    - choiceText: Shhh we're trying to watch an A-rated movie
+      effects:
+      - property:
+          name: Self-control
+          type: 2
+        amount: -1
+        consequenceText: 
+      - property:
+          name: Risk
+          type: 2
+        amount: 1
+        consequenceText: 
+      - property:
+          name: Fun
+          type: 1
+        amount: -1
+        consequenceText: You watch some things that give you nightmares.
+      - property:
+          name: Health
+          type: 1
+        amount: -1
+        consequenceText: You can't sleep for days.
+    requirements: []
+  - decisionText: The teacher's union, hmmm yes, we want to negotiate stricter deadlines
+      for erm, assignments, hmm, in return for a longer recess.
+    speakerName: 'Leader: Cult of Curriculum'
+    choices:
+    - choiceText: I'll negotiate
+      effects:
+      - property:
+          name: Strategy
+          type: 2
+        amount: 1
+        consequenceText: 
+      - property:
+          name: Learning
+          type: 1
+        amount: 1
+        consequenceText: Everyone has to actually do their homework now.
+      - property:
+          name: Fun
+          type: 1
+        amount: 1
+        consequenceText: But afterwards they get to go for recess without the stress
+          of impending homework!
+      - property:
+          name: Health
+          type: 1
+        amount: 1
+        consequenceText: Since they feel lighter they run further and jump higher!
+    - choiceText: I don't negotiate with terrorists
+      effects:
+      - property:
+          name: Siliness
+          type: 2
+        amount: 1
+        consequenceText: 
+      - property:
+          name: Kindness
+          type: 2
+        amount: -1
+        consequenceText: 
+      - property:
+          name: Learning
+          type: 1
+        amount: -1
+        consequenceText: Nobody does their homework.
+      - property:
+          name: Fun
+          type: 1
+        amount: -1
+        consequenceText: So teachers end up making them do it in class, and cancel
+          recess entirely.
+    requirements: []
+  - decisionText: You cannot live in an entirely white house. That's so 2010!
+    speakerName: Principal Party Planner
+    choices:
+    - choiceText: Paint the house rainbow-coloured
+      effects:
+      - property:
+          name: Silliness
+          type: 2
+        amount: 1
+        consequenceText: 
+      - property:
+          name: Fun
+          type: 1
+        amount: 1
+        consequenceText: Painting party!
+      - property:
+          name: Learning
+          type: 1
+        amount: 1
+        consequenceText: And now that your office is nicer to look at, more people
+          pay attention to the news!
+    - choiceText: I don't see it
+      effects:
+      - property:
+          name: Practicality
+          type: 2
+        amount: 1
+        consequenceText: 
+      - property:
+          name: Learning
+          type: 1
+        amount: -1
+        consequenceText: You don't learn how to mix the pantone colours.
+      - property:
+          name: Health
+          type: 1
+        amount: 1
+        consequenceText: But at least you don't inhale paint fumes for the next few
+          weeks.
+    requirements: []
+  - decisionText: I'm not sure what's down there. But will you fund me to go treasure-seeking
+      in the ocean?
+    speakerName: Explorer at Large
+    choices:
+    - choiceText: Okay
+      effects:
+      - property:
+          name: Risk
+          type: 2
+        amount: 1
+        consequenceText: 
+      - property:
+          name: Learning
+          type: 1
+        amount: 1
+        consequenceText: Whales are much smarter than most people.
+      - property:
+          name: Wealth
+          type: 1
+        amount: -1
+        consequenceText: But you have to dive deep into your pockets to fund deep-sea
+          diving.
+      - property:
+          name: Wealth
+          type: 1
+        amount: 2
+        consequenceText: Luckily it eventually pays off - quite literally!
+    - choiceText: Waste of money
+      effects:
+      - property:
+          name: Risk
+          type: 2
+        amount: -1
+        consequenceText: 
+      - property:
+          name: Learning
+          type: 1
+        amount: -1
+        consequenceText: You don't know what you don't know and you know that's a
+          lot.
+      - property:
+          name: Health
+          type: 1
+        amount: 1
+        consequenceText: But none of you get swallowed by whales, stung by jellyfish,
+          or have allergic reactions to sushi.
+    requirements: []
+  - decisionText: 'Your test scores are in. Hmm, yes, well: You''ve failed yet another
+      Political Science examination.'
+    speakerName: 'Leader: Cult of Curriculum'
+    choices:
+    - choiceText: Reject the exam
+      effects:
+      - property:
+          name: Courage
+          type: 2
+        amount: -1
+        consequenceText: 
+      - property:
+          name: Self-control
+          type: 2
+        amount: -1
+        consequenceText: 
+      - property:
+          name: Learning
+          type: 1
+        amount: -1
+        consequenceText: You never quite understand if politics is an art or a science.
+      - property:
+          name: Wealth
+          type: 1
+        amount: -1
+        consequenceText: Your erratic decisions lead to uncertain market environments.
+      - property:
+          name: Fun
+          type: 1
+        amount: 1
+        consequenceText: But you have a lot of fun making confetti out of your test
+          booklet!
+    - choiceText: Hire a tutor
+      effects:
+      - property:
+          name: Resilience
+          type: 2
+        amount: 1
+        consequenceText: 
+      - property:
+          name: Courage
+          type: 2
+        amount: 1
+        consequenceText: 
+      - property:
+          name: Wealth
+          type: 1
+        amount: 1
+        consequenceText: Textbook sales go up when everyone sees that studying can
+          sometimes be cool.
+      - property:
+          name: Fun
+          type: 1
+        amount: -1
+        consequenceText: But you're not spending all your time playing with your
+          toy soldiers anymore, so they get lonely.
+      - property:
+          name: Learning
+          type: 1
+        amount: 1
+        consequenceText: But since you ace your exam you learn that war isn't always
+          fun!
+    requirements:
+    - property:
+        name: 
+        type: 0
+      checkMin: 0
+      checkMax: 0
+      minValue: 0
+      maxValue: 0
+    - property:
+        name: 
+        type: 0
+      checkMin: 0
+      checkMax: 0
+      minValue: 0
+      maxValue: 0
+    - property:
+        name: 
+        type: 0
+      checkMin: 0
+      checkMax: 0
+      minValue: 0
+      maxValue: 0
