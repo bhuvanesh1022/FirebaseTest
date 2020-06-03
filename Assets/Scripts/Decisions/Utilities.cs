@@ -4,10 +4,28 @@ using System.Collections.Generic;
 using TMPro;
 
 public class Utilities {
-	public static void AppearifyText(TMP_Text text, int lettersPerSecond = 60, float fadeTime = 0.2f) {
-		text.StartCoroutine(AppearifyCR());
+	class UtilitiesInstance : MonoBehaviour {
+		public static UtilitiesInstance Instance {
+			get {
+				if (!_instance) {
+					_instance = new GameObject("Utilities", typeof(UtilitiesInstance)).GetComponent<UtilitiesInstance>();
+					DontDestroyOnLoad(_instance.gameObject);
+				}
+				return _instance;
+			}
+		}
+		static UtilitiesInstance _instance;
+	}
+
+	public delegate void AppearifyEndEvent();
+
+	public static AppearifyEndEvent AppearifyText(TMP_Text text, float lettersPerSecond = 250, float fadeTime = 0.2f) {
+		AppearifyEndEvent onAppearifyEnd = delegate { };
+		UtilitiesInstance.Instance.StartCoroutine(AppearifyCR());
+		return onAppearifyEnd;
 
 		IEnumerator AppearifyCR() {
+			yield return null;
 			text.ForceMeshUpdate();
 			Color32[] newVertexColors;
 			newVertexColors = text.textInfo.meshInfo[text.textInfo.characterInfo[0].materialReferenceIndex].colors32;
@@ -15,11 +33,12 @@ public class Utilities {
 			text.UpdateVertexData(TMP_VertexDataUpdateFlags.Colors32);
 			yield return null;
 
-			int curCharIndex = 0;
+			float curCharIndex = 0;
 			do {
-				int lastCharIndex = curCharIndex;
-				curCharIndex = Mathf.Min(curCharIndex + Mathf.CeilToInt(Time.deltaTime * lettersPerSecond), text.textInfo.characterCount);
-				for (int c = lastCharIndex; c < curCharIndex; c++) {
+				float lastCharIndex = curCharIndex;
+				curCharIndex = curCharIndex + (Time.deltaTime * lettersPerSecond);
+				int fromIndex = Mathf.RoundToInt(lastCharIndex), toIndex = Mathf.RoundToInt(curCharIndex);
+				for (int c = fromIndex; c < toIndex; c++) {
 					int vertexIndex = text.textInfo.characterInfo[c].vertexIndex;
 					for (int v = 0; v < 4; v++) newVertexColors[vertexIndex + v].a = 255;
 				}
@@ -42,6 +61,8 @@ public class Utilities {
 			//	yield return null;
 			//}
 			//while (!isDone);
+
+			onAppearifyEnd?.Invoke();
 		}
 	}
 }

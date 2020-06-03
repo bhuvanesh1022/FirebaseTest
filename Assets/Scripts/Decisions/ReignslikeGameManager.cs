@@ -29,8 +29,8 @@ public class ReignslikeGameManager : MonoBehaviour {
 	Dictionary<string, int> statMap = new Dictionary<string, int>(),
 							traitMap = new Dictionary<string, int>();
 
-	public delegate void SessionEndEvent(Dictionary<string, int> traitValues);
-	public SessionEndEvent OnSessionEnded;
+	public delegate void SessionEndEvent(UserGameData traitResults);
+	public static SessionEndEvent OnSessionEnded;
 
 	private void Awake() {
         scoreObj = GameObject.FindWithTag("GameController").GetComponent<playerscore>();
@@ -205,6 +205,6 @@ public class ReignslikeGameManager : MonoBehaviour {
             UpdateTraits();
             outcomeText.text = newText;
 		}
-		OnSessionEnded?.Invoke(traitMap);
+		OnSessionEnded?.Invoke(new UserGameData(traitMap));
 	}
 }

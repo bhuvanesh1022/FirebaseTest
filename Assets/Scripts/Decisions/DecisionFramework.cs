@@ -39,4 +39,47 @@ namespace DecisionFramework {
 		public int minValue, maxValue;
 		//public bool checkExists = false, doesExist;
 	}
+
+	[System.Serializable]
+	public class UserGameData {
+		public List<GameRecord> Records {
+			get { return records; }
+		}
+
+		[SerializeField] List<GameRecord> records;
+
+		public UserGameData(Dictionary<string, int> gameData) {
+			records = new List<GameRecord>();
+			foreach (var kvp in gameData) {
+				records.Add(new GameRecord() {
+					name = kvp.Key, value = kvp.Value
+				});
+			}
+		}
+
+		public string GetJson() {
+			return JsonUtility.ToJson(this);
+		}
+
+		public string Display() {
+			string retval = string.Empty;
+			bool isFirst = true;
+			records.ForEach(rec => {
+				if (!isFirst) retval += "\n";
+				else isFirst = false;
+				retval += string.Format("{0}: {1}", rec.name, rec.value);
+			});
+			return retval;
+		}
+
+		public static UserGameData CreateFromJson(string json) {
+			return JsonUtility.FromJson<UserGameData>(json);
+		}
+
+		[System.Serializable]
+		public class GameRecord {
+			public string name;
+			public int value;
+		}
+	}
 }
