@@ -42,6 +42,10 @@ namespace DecisionFramework {
 
 	[System.Serializable]
 	public class UserGameData {
+		public List<GameRecord> Records {
+			get { return records; }
+		}
+
 		[SerializeField] List<GameRecord> records;
 
 		public UserGameData(Dictionary<string, int> gameData) {
