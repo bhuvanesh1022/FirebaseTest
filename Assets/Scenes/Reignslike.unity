@@ -1522,7 +1522,7 @@ MonoBehaviour:
     Strategy: 
   localID: 
   decHolder: {fileID: 11400000, guid: 0bc97cfc63ce47b4c8c97febcbbe760a, type: 2}
-  turnsTotal: 10
+  turnsTotal: 1
   startingStat: 5
   minStat: 0
   maxStat: 10
@@ -2334,6 +2334,11 @@ PrefabInstance:
       propertyPath: m_subTextObjects.Array.data[1]
       value: 
       objectReference: {fileID: 705325859}
+    - target: {fileID: 5934691187775539838, guid: da07bb54a04a8554fa63178c057612e0,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: da07bb54a04a8554fa63178c057612e0, type: 3}
 --- !u!224 &1926814899 stripped

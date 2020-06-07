@@ -45,7 +45,7 @@ public class ReignslikeGameManager : MonoBehaviour {
 	private void Start() {
         u = scoreObj.user;
         welcomeText.text = "<line-height=150%>" + "Hi! " + u.userName.ToUpper();
-        lastTraitsText.text += "\n" + scoreObj.lastTraits;
+        lastTraitsText.text += scoreObj.lastTraits != "" ?  "\n" + scoreObj.lastTraits : "";
 
         //localID = scoreObj.localid;
 		turnsLeft = turnsTotal;
@@ -66,56 +66,6 @@ public class ReignslikeGameManager : MonoBehaviour {
 		foreach (var kvp in statMap) newText += string.Format("\n<line-height=100%>{0}: {1}", kvp.Key, kvp.Value.ToString());
 		statusText.text = newText;
 	}
-
-    void UpdateTraits()
-    {
-        foreach (var kvp in traitMap)
-        {
-            Debug.Log(kvp.Key);
-
-            switch (kvp.Key)
-            {
-                case "Courage":
-                    scoreObj.c1 = kvp.Value;
-                    break;
-
-                case "Ethics":
-                    scoreObj.e1 = kvp.Value;
-                    break;
-
-                case "Kindness":
-                    scoreObj.k1 = kvp.Value;
-                    break;
-
-                case "Practicality":
-                    scoreObj.p1 = kvp.Value;
-                    break;
-
-                case "Responsibility":
-                    scoreObj.r1 = kvp.Value;
-                    break;
-
-                case "Risk":
-                    scoreObj.r2 = kvp.Value;
-                    break;
-
-                case "Self-control":
-                    scoreObj.s1 = kvp.Value;
-                    break;
-
-                case "Silliness":
-                    scoreObj.s2 = kvp.Value;
-                    break;
-
-                case "Strategy":
-                    scoreObj.s3 = kvp.Value;
-                    break;
-
-                default:
-                    break;
-            }
-        }
-    }
 
     void NextDecision() 
     {
@@ -201,8 +151,7 @@ public class ReignslikeGameManager : MonoBehaviour {
             {
                 newText += (string.IsNullOrEmpty(newText) ? "" : "\n") + string.Format("{0}: {1}", kvp.Key, kvp.Value.ToString());
             }
-            newText += "\n" + "Traits Submitted.";
-            UpdateTraits();
+            newText += "\n" + "\n" + "Traits Submitted.";
             outcomeText.text = newText;
 		}
 		OnSessionEnded?.Invoke(new UserGameData(traitMap));

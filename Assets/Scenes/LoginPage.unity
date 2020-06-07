@@ -4871,6 +4871,7 @@ MonoBehaviour:
   s1: 0
   s2: 0
   s3: 0
+  lastTraits: 
   gameSceneId: 1
   scoretext: {fileID: 1629028883}
   Display_txt: {fileID: 1363383885}
@@ -4885,9 +4886,9 @@ MonoBehaviour:
   passwordtext1: {fileID: 1114783971}
   disUsername: {fileID: 1428544362}
   user:
-    userName: nivetha
+    userName: 
     userscore: 
-    localid: PL9GjyKybFVBIXTOOxgkjrXQwS22
+    localid: 
     Courage: 
     Ethics: 
     Kindness: 
