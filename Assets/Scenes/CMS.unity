@@ -270,6 +270,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   guiSkin: {fileID: 11400000, guid: 394be8872a1db18408406fa4695ab2be, type: 2}
   holder: {fileID: 11400000, guid: 0bc97cfc63ce47b4c8c97febcbbe760a, type: 2}
+  guiWidth: 1024
 --- !u!4 &488123075
 Transform:
   m_ObjectHideFlags: 0

@@ -2,28 +2,29 @@
 using DecisionFramework;
 
 public class DecisionGUI {
-	public Decision ShownDecision { get; private set; }
-
-	public DecisionGUI(Decision initializer = null) {
-		ShownDecision = initializer;
-		if (initializer == null) ShownDecision = new Decision();
-	}
-
 	const float PADDING = 20f, LABEL_WIDTH = 80f, EFFECT_LABEL_WIDTH = 50f;
 
-	public void OnGUI() {
+	static Vector2 scrollPos;
+
+	public static void ShowDecision(ref Decision decision) {
+		if (decision == null) {
+			scrollPos = Vector2.zero;
+			return;
+		}
+
+		scrollPos = GUILayout.BeginScrollView(scrollPos);
 		GUILayout.BeginVertical();
 		GUILayout.Space(PADDING);
 
 		// Decision data
 		GUILayout.BeginHorizontal();
 		GUILayout.Label("Speaker", GUILayout.Width(LABEL_WIDTH));
-		ShownDecision.speakerName = GUILayout.TextField(ShownDecision.speakerName);
+		decision.speakerName = GUILayout.TextField(decision.speakerName);
 		GUILayout.EndHorizontal();
 
 		GUILayout.BeginHorizontal();
 		GUILayout.Label("Dialogue", GUILayout.Width(LABEL_WIDTH));
-		ShownDecision.decisionText = GUILayout.TextArea(ShownDecision.decisionText, GUILayout.MinHeight(60f));
+		decision.decisionText = GUILayout.TextArea(decision.decisionText, GUILayout.MinHeight(60f));
 		GUILayout.EndHorizontal();
 
 		void Separator(bool withBar = false) {
@@ -36,37 +37,37 @@ public class DecisionGUI {
 		}
 
 		// Choice data
-		for (int c = 0; c < ShownDecision.choices.Count; c++) {
+		for (int c = 0; c < decision.choices.Count; c++) {
 			Separator(c > 0);
 
 			GUILayout.BeginHorizontal();
 			GUILayout.Label("Choice " + (c + 1).ToString(), GUILayout.Width(LABEL_WIDTH));
 			GUILayout.FlexibleSpace();
 			if (GUILayout.Button("Remove choice", GUILayout.Width(120f))) {
-				ShownDecision.choices.RemoveAt(c);
+				decision.choices.RemoveAt(c);
 				break;
 			}
 			GUILayout.EndHorizontal();
-			ShownDecision.choices[c].choiceText = GUILayout.TextField(ShownDecision.choices[c].choiceText);
+			decision.choices[c].choiceText = GUILayout.TextField(decision.choices[c].choiceText);
 
 			GUILayout.Space(15f);
 
-			for (int e = 0; e < ShownDecision.choices[c].effects.Count; e++) {
+			for (int e = 0; e < decision.choices[c].effects.Count; e++) {
 
 				// Effect data
-				void RemoveButton(float buttonWidth = 80f) {
+				void RemoveButton(ref Decision dec, float buttonWidth = 80f) {
 					GUILayout.FlexibleSpace();
 					if (GUILayout.Button("Remove", GUILayout.Width(buttonWidth)))
-						ShownDecision.choices[c].effects.RemoveAt(e);
+						dec.choices[c].effects.RemoveAt(e);
 				}
 
-				switch (ShownDecision.choices[c].effects[e].property.type) {
+				switch (decision.choices[c].effects[e].property.type) {
 				case Property.Type.TRAIT:
 					GUILayout.BeginHorizontal();
 					GUILayout.Label("Trait", GUILayout.Width(EFFECT_LABEL_WIDTH));
-					ShownDecision.choices[c].effects[e].property.name = GUILayout.TextField(ShownDecision.choices[c].effects[e].property.name, GUILayout.Width(100f));
-					ShownDecision.choices[c].effects[e].amount = int.Parse(GUILayout.TextField(ShownDecision.choices[c].effects[e].amount.ToString(), GUILayout.Width(50f)));
-					RemoveButton();
+					decision.choices[c].effects[e].property.name = GUILayout.TextField(decision.choices[c].effects[e].property.name, GUILayout.Width(100f));
+					decision.choices[c].effects[e].amount = int.Parse(GUILayout.TextField(decision.choices[c].effects[e].amount.ToString(), GUILayout.Width(50f)));
+					RemoveButton(ref decision);
 					GUILayout.EndHorizontal();
 					break;
 
@@ -74,11 +75,11 @@ public class DecisionGUI {
 					GUILayout.Space(15f);
 					GUILayout.BeginHorizontal();
 					GUILayout.Label("Stat", GUILayout.Width(EFFECT_LABEL_WIDTH));
-					ShownDecision.choices[c].effects[e].property.name = GUILayout.TextField(ShownDecision.choices[c].effects[e].property.name, GUILayout.Width(100f));
-					ShownDecision.choices[c].effects[e].amount = int.Parse(GUILayout.TextField(ShownDecision.choices[c].effects[e].amount.ToString(), GUILayout.Width(50f)));
-					RemoveButton();
+					decision.choices[c].effects[e].property.name = GUILayout.TextField(decision.choices[c].effects[e].property.name, GUILayout.Width(100f));
+					decision.choices[c].effects[e].amount = int.Parse(GUILayout.TextField(decision.choices[c].effects[e].amount.ToString(), GUILayout.Width(50f)));
+					RemoveButton(ref decision);
 					GUILayout.EndHorizontal();
-					ShownDecision.choices[c].effects[e].consequenceText = GUILayout.TextArea(ShownDecision.choices[c].effects[e].consequenceText, GUILayout.MinHeight(45f));
+					decision.choices[c].effects[e].consequenceText = GUILayout.TextArea(decision.choices[c].effects[e].consequenceText, GUILayout.MinHeight(45f));
 					break;
 
 				default:
@@ -89,7 +90,7 @@ public class DecisionGUI {
 			GUILayout.Space(15f);
 			GUILayout.BeginHorizontal();
 			if (GUILayout.Button("Add trait effect", GUILayout.Width(150f))) {
-				ShownDecision.choices[c].effects.Insert(ShownDecision.choices[c].effects.FindLastIndex(effect => effect.property.type == Property.Type.TRAIT) + 1,
+				decision.choices[c].effects.Insert(decision.choices[c].effects.FindLastIndex(effect => effect.property.type == Property.Type.TRAIT) + 1,
 					new Effect() {
 						property = new Property() {
 							type = Property.Type.TRAIT
@@ -97,7 +98,7 @@ public class DecisionGUI {
 					});
 			}
 			if (GUILayout.Button("Add stat effect", GUILayout.Width(150f))) {
-				ShownDecision.choices[c].effects.Add(new Effect() {
+				decision.choices[c].effects.Add(new Effect() {
 					property = new Property() {
 						type = Property.Type.STAT
 					}
@@ -108,10 +109,11 @@ public class DecisionGUI {
 
 		Separator();
 		if (GUILayout.Button("Add choice", GUILayout.Width(100f))) {
-			ShownDecision.choices.Add(new Choice());
+			decision.choices.Add(new Choice());
 		}
 
 		GUILayout.Space(PADDING);
 		GUILayout.EndVertical();
+		GUILayout.EndScrollView();
 	}
 }
