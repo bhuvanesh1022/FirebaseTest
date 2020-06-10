@@ -8,21 +8,21 @@ namespace DecisionFramework {
 	[System.Serializable]
 	public class Decision {
 		public string decisionText, speakerName;
-		public List<Choice> choices;
-		public List<Requirement> requirements;
+		public List<Choice> choices = new List<Choice>();
+		public List<Requirement> requirements = new List<Requirement>();
 	}
 
 	[System.Serializable]
 	public class Choice {
 		public string choiceText;
-		public List<Effect> effects;
+		public List<Effect> effects = new List<Effect>();
 	}
 	
 	[System.Serializable]
 	public class Property {
 		public enum Type { NONE, STAT, TRAIT, FLAG }
-		public string name;
 		public Type type;
+		public string name;
 	}
 
 	[System.Serializable]

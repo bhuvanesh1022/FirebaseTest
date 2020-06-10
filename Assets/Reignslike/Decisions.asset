@@ -860,25 +860,4 @@ MonoBehaviour:
         amount: 1
         consequenceText: But since you ace your exam you learn that war isn't always
           fun!
-    requirements:
-    - property:
-        name: 
-        type: 0
-      checkMin: 0
-      checkMax: 0
-      minValue: 0
-      maxValue: 0
-    - property:
-        name: 
-        type: 0
-      checkMin: 0
-      checkMax: 0
-      minValue: 0
-      maxValue: 0
-    - property:
-        name: 
-        type: 0
-      checkMin: 0
-      checkMax: 0
-      minValue: 0
-      maxValue: 0
+    requirements: []
