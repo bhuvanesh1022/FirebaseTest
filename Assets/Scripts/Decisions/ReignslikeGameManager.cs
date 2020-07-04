@@ -137,19 +137,28 @@ public class ReignslikeGameManager : MonoBehaviour {
 		bool IsDecisionAvailable(Decision dec) {
 			return dec.requirements.TrueForAll(req => {
 				int checkVal = 0;
-				switch (req.property.type) {
-				case Property.Type.STAT:
-					if (!statMap.ContainsKey(req.property.name)) return false;
-					checkVal = statMap[req.property.name];
+
+				switch (req.check.type) {
+				case PropertyType.STAT:
+					if (!statMap.ContainsKey(req.check.name)) return false;
+					checkVal = statMap[req.check.name];
 					break;
-				case Property.Type.TRAIT:
-					if (!traitMap.ContainsKey(req.property.name)) return false;
-					checkVal = traitMap[req.property.name];
+				case PropertyType.ATTRIBUTE:
+					if (!traitMap.ContainsKey(req.check.name)) return false;
+					checkVal = traitMap[req.check.name];
 					break;
 				default:
 					break;
 				}
-				return (!req.checkMin || checkVal >= req.minValue) && (!req.checkMin || checkVal <= req.maxValue);
+
+				switch (req.checkType) {
+				case Requirement.CheckType.GREATER_THAN:
+					return checkVal > req.check.value;
+				case Requirement.CheckType.LESS_THAN:
+					return checkVal < req.check.value;
+				default:
+					return true;
+				}
 			});
 		}
 
@@ -173,20 +182,14 @@ public class ReignslikeGameManager : MonoBehaviour {
 	}
 
 	void OnDecisionTaken(Choice choice) {
-		foreach (var effect in choice.effects) {
-			switch (effect.property.type) {
-			case Property.Type.STAT:
-				if (!statMap.ContainsKey(effect.property.name)) break;
-				statMap[effect.property.name] = Mathf.Clamp(statMap[effect.property.name] + effect.amount, minStat, maxStat);
-				break;
-			case Property.Type.TRAIT:
-				if (!traitMap.ContainsKey(effect.property.name)) traitMap[effect.property.name] = 0;
-				traitMap[effect.property.name] += effect.amount;
-				break;
-			default:
-				break;
-			}
-		}
+		choice.attributeEffects.ForEach(trait => {
+			if (traitMap.ContainsKey(trait.name)) traitMap[trait.name] += trait.value;
+		});
+
+		choice.consequences.ForEach(con => con.statEffects.ForEach(stat => {
+			if (statMap.ContainsKey(stat.name)) statMap[stat.name] = Mathf.Clamp(statMap[stat.name] + stat.value, minStat, maxStat);
+		}));
+
 		UpdateStatus();
 		turnsLeft--;
 	}

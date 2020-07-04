@@ -52,14 +52,12 @@ public class DecisionDisplay : MonoBehaviour {
 		Choice curChoice = choiceMap[button];
 		OnDecisionTaken?.Invoke(curChoice);
 		string newText = string.Empty;
-		foreach (var effect in curChoice.effects) {
-			if (effect.property.type != Property.Type.NONE && effect.property.type != Property.Type.STAT) continue;
-
-			if (effect.property.type != Property.Type.NONE && !string.IsNullOrEmpty(effect.property.name))
-				newText += string.Format("<b>{0} {1}</b>\n", effect.property.name, effect.amount.ToString("+0;-#"));
-
-			if (!string.IsNullOrEmpty(effect.consequenceText))
-				newText += effect.consequenceText + "\n\n";
+		foreach (var con in curChoice.consequences) {
+			foreach (var stat in con.statEffects) {
+				if (stat.type != PropertyType.STAT || string.IsNullOrEmpty(stat.name)) continue;
+				newText += string.Format("<b>{0} {1}</b>\n", stat.name, stat.value.ToString("+0;-#"));
+			}
+			if (!string.IsNullOrEmpty(con.consequenceText)) newText += con.consequenceText + "\n\n";
 		}
 		effectsText.text = newText;
 		SetEffectsVisibility(true);
