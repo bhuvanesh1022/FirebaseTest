@@ -5,7 +5,7 @@ using DecisionFramework;
 using TMPro;
 using UnityEngine.UI;
 
-public class CMSChoice : CMSGridCellElement {
+public class CMSChoice : CMSLayoutElement {
 	[SerializeField] TMP_Text choiceLabel;
 	[SerializeField] CMSInputField choiceTextField;
 	[SerializeField] CMSLayoutSetup attributesGridSetup, effectsGridSetup;
@@ -57,7 +57,7 @@ public class CMSChoice : CMSGridCellElement {
 
 		Choice.consequences.Clear();
 		effectsGrid.Elements.ForEach(con => {
-			con.RefreshConsequence();
+			con.Refresh();
 			Choice.consequences.Add(con.Consequence);
 		});
 	}

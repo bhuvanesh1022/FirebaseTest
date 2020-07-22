@@ -45,17 +45,22 @@ public class CMSManager : MonoBehaviour {
 
 	[SerializeField] GUISkin guiSkin;
 	[SerializeField] DecisionsHolder decisionsHolder;
-	[SerializeField] GameObject loadingObject, introTextObject;
+	[SerializeField] GameObject introTextObject;
+	[SerializeField] CMSAnimatedActivatable loadingOverlay;
+	[SerializeField] string reportingURL;
 
 	// UI elements
 	[SerializeField] CMSDecision decisionUI;
-	[SerializeField] Button revertButton, uploadChangesButton, addDecisionButton, removeDecisionButton, resetButton, resetLocalButton, resetSceneButton;
+	[SerializeField] CMSButton revertButton, uploadChangesButton, addDecisionButton, removeDecisionButton, resetButton, resetLocalButton;
+	[SerializeField] CMSDialog commonDialog;
 	[SerializeField] CMSLayoutSetup decisionsLayoutSetup;
 	[SerializeField] CMSToggleButton decisionButtonPrefab;
 	[SerializeField] ToggleGroup decisionListGroup;
 
 	public delegate void CMSInputEvent(CMSKeypress input);
 	public static CMSInputEvent OnCMSInput;
+
+	public CMSDialog CommonDialog { get => commonDialog; }
 
 	CMSLayout<CMSToggleButton> decisionsLayout;
 
@@ -65,9 +70,9 @@ public class CMSManager : MonoBehaviour {
 	}
 
 	bool ShowLoading {
-		get { return loadingObject ? loadingObject.activeSelf : false; }
+		get { return loadingOverlay ? loadingOverlay.IsActive : false; }
 		set {
-			if (loadingObject) loadingObject.SetActive(value);
+			if (loadingOverlay) loadingOverlay.SetActive(value);
 			if (introTextObject) introTextObject.SetActive(!value);
 		}
 	}
@@ -108,6 +113,14 @@ public class CMSManager : MonoBehaviour {
 		});
 	}
 
+	public void ResetScene() {
+		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+	}
+
+	public void OpenReportingURL() {
+		if (!string.IsNullOrEmpty(reportingURL)) Application.OpenURL(reportingURL);
+	}
+
 	// Private methods
 	
 	void Awake() {
@@ -117,28 +130,31 @@ public class CMSManager : MonoBehaviour {
 
 		if (resetButton || resetLocalButton) try {
 #if UNITY_EDITOR
-				resetButton.onClick.AddListener(ResetFromLocal);
-				resetLocalButton.onClick.AddListener(ResetFromRemote);
+				resetButton.OnClick.AddListener(ResetFromLocal);
+				resetLocalButton.OnClick.AddListener(ResetFromRemote);
 #else
 				resetButton.gameObject.SetActive(false);
 				resetLocalButton.gameObject.SetActive(false);
 #endif
 			} catch (System.Exception) { }
 
-		if (uploadChangesButton) uploadChangesButton.onClick.AddListener(UploadChanges);
-		if (revertButton) revertButton.onClick.AddListener(() => RevertChanges());
-		if (addDecisionButton) addDecisionButton.onClick.AddListener(AddDecision);
-		if (removeDecisionButton) removeDecisionButton.onClick.AddListener(RemoveCurrentDecision);
-		if (resetSceneButton) resetSceneButton.onClick.AddListener(() => SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex));
+		if (uploadChangesButton) uploadChangesButton.OnClick.AddListener(UploadChanges);
+		if (revertButton) revertButton.OnClick.AddListener(() => RevertChanges());
+		if (addDecisionButton) addDecisionButton.OnClick.AddListener(AddDecision);
+		if (removeDecisionButton) removeDecisionButton.OnClick.AddListener(RemoveCurrentDecision);
 
 		if (decisionsLayoutSetup) {
 			decisionsLayout = new CMSLayout<CMSToggleButton>(decisionsLayoutSetup, decisionButtonPrefab);
-			if (decisionListGroup) decisionsLayout.OnCellAddedOrRemoved += (decToggle, wasAdded) => {
-				if (wasAdded) {
-					decToggle.Toggle.group = decisionListGroup;
-					// TODO: Select this new decision and navigate to it
-				}
-			};
+			if (decisionListGroup) {
+				decisionsLayout.OnCellAddedOrRemoved += (decToggle, wasAdded) => {
+					if (wasAdded) {
+						decToggle.Toggle.group = decisionListGroup;
+						// TODO: Select this new decision and navigate to it
+					}
+				};
+				decisionListGroup.allowSwitchOff = true;
+				decisionListGroup.SetAllTogglesOff(false);
+			}
 		}
 
 		if (decisionUI) decisionUI.gameObject.SetActive(false);
@@ -237,7 +253,7 @@ public class CMSManager : MonoBehaviour {
 
 	void UpdateCurrentDecision() {
 		if (curDecIndex < 0 || curDecIndex >= decisions.Count) return;
-		decisionUI.RefreshDecision();
+		decisionUI.Refresh();
 		if (!changedDecIndices.Contains(curDecIndex)) changedDecIndices.Add(curDecIndex);
 		decisionsLayout.Elements[curDecIndex].SetText(decisions[curDecIndex].decisionText);
 	}

@@ -4,7 +4,7 @@ using UnityEngine;
 using TMPro;
 using DecisionFramework;
 
-public class CMSConsequence : CMSGridCellElement {
+public class CMSConsequence : CMSLayoutElement {
 	[SerializeField] CMSLayoutSetup statEffectsGridSetup;
 	[SerializeField] CMSNameNumber statEffectPrefab, statEffect;
 	[SerializeField] CMSInputField effectTextField;
@@ -29,7 +29,7 @@ public class CMSConsequence : CMSGridCellElement {
 		}
 	}
 
-	public void RefreshConsequence() {
+	public void Refresh() {
 		Consequence.consequenceText = effectTextField.Text;
 		Consequence.statEffects.Clear();
 		Consequence.statEffects.Add(new Property() {

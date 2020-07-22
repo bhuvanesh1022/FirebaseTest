@@ -6,6 +6,7 @@ using TMPro;
 
 public class CMSDecision : MonoBehaviour {
 	[SerializeField] CMSInputField decisionTextField, speakerField;
+	[SerializeField] CMSRequirementsHolder requirements;
 	[SerializeField] CMSLayoutSetup choicesLayoutSetup;
 	[SerializeField] CMSChoice choicePrefab;
 
@@ -27,6 +28,7 @@ public class CMSDecision : MonoBehaviour {
 		Decision = dec ?? new Decision();
 		decisionTextField.Initialize(Decision.decisionText);
 		speakerField.Initialize(Decision.speakerName);
+		requirements.Initialize(dec.requirements);
 		choicesLayout.Clear();
 		for (int c = 0; c < Decision.choices.Count; c++) choicesLayout.Add().Initialize(Decision.choices[c]);
 		UpdateChoiceLabels();
@@ -42,9 +44,12 @@ public class CMSDecision : MonoBehaviour {
 		for (int c = 0; c < choicesLayout.Elements.Count; c++) choicesLayout.Elements[c].UpdateChoiceLabel(c);
 	}
 
-	public void RefreshDecision() {
+	public void Refresh() {
 		Decision.decisionText = decisionTextField.Text;
 		Decision.speakerName = speakerField.Text;
+
+		requirements.Refresh();
+		Decision.requirements = requirements.Requirements;
 
 		Decision.choices.Clear();
 		choicesLayout.Elements.ForEach(choice => {

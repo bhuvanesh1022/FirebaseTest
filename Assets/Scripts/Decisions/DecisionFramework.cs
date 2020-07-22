@@ -8,7 +8,7 @@ using System;
 namespace DecisionFramework {
 	[System.Serializable]
 	public class Decision {
-		public string decisionText, speakerName;
+		public string decisionText, speakerName, imageID;
 		public List<Choice> choices = new List<Choice>(); // { new Choice(), new Choice() };
 		public List<Requirement> requirements = new List<Requirement>();
 	}
@@ -57,15 +57,13 @@ namespace DecisionFramework {
 	[System.Serializable]
 	public class Consequence {
 		public List<Property> statEffects = new List<Property>();
-		public string consequenceText = string.Empty;
+		public string consequenceText = string.Empty, artDescription = string.Empty; // Also doodle
 	}
 
 	[System.Serializable]
 	public class Requirement {
 		public Property check;
-		public enum CheckType {
-			EXISTS, LESS_THAN, GREATER_THAN
-		}
+		public enum CheckType { PRESENT, ABSENT, EQUALS, LESS_THAN, GREATER_THAN }
 		public CheckType checkType;
 	}
 
@@ -92,6 +90,12 @@ namespace DecisionFramework {
 			hashCode = hashCode * -1521134295 + EqualityComparer<List<WeightedEffect>>.Default.GetHashCode(affectedAttributes);
 			return hashCode;
 		}
+	}
+
+	[System.Serializable]
+	public class ArtPiece {
+		public string artDescription, artFilename;
+		[NonSerialized] public Sprite sprite;
 	}
 
 	[System.Serializable]
