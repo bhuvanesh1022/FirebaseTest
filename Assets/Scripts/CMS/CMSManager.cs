@@ -11,16 +11,15 @@ using UnityEngine.SceneManagement;
 
 public enum CMSKeypress { CONFIRM, UP, DOWN }
 public enum CMSTextType { NONE, DECISION, CHOICE, CONSEQUENCE }
-public enum CMSSearchType { NONE, ATTRIBUTE, SPEAKER, STAT }
 
 public abstract class CMSInputField : MonoBehaviour {
 	[SerializeField] CMSTextType textType;
-	[SerializeField] CMSSearchType searchType;
+	[SerializeField] ListType searchType;
 
 	public CMSTextType TextType {
 		get { return textType; }
 	}
-	public CMSSearchType SearchType {
+	public ListType SearchType {
 		get { return searchType; }
 	}
 
@@ -38,7 +37,7 @@ public abstract class CMSInputField : MonoBehaviour {
 
 	protected abstract void InitializeCustom(string startText);
 }
-	
+
 
 public class CMSManager : MonoBehaviour {
 	public static CMSManager Instance { get; private set; }
@@ -77,15 +76,31 @@ public class CMSManager : MonoBehaviour {
 		}
 	}
 
+	[System.Serializable]
+	class CMSCharacterLimits {
+		[SerializeField] int decisionCharLimit = 100, choiceCharLimit = 70, consequenceCharLimit = 150;
+
+		public int GetCharacterLimit(CMSTextType textType) {
+			switch (textType) {
+			case CMSTextType.DECISION: return decisionCharLimit;
+			case CMSTextType.CHOICE: return choiceCharLimit;
+			case CMSTextType.CONSEQUENCE: return consequenceCharLimit;
+			default: return 0;
+			}
+		}
+	}
+
+	CMSCharacterLimits charLimits = new CMSCharacterLimits();
 	List<Decision> decisions = new List<Decision>();
 	ListsHolder listsHolder = new ListsHolder();
 	List<int> changedDecIndices = new List<int>();
 	int curDecIndex = -1;
-	string decisionsURL, listsURL;
+	string decisionsURL, listsURL, charLimitsURL;
 	Stack<UndoAction> undoStack = new Stack<UndoAction>();
 
 	const string DECISIONS_SUFFIX = "decisions",
 		LISTS_SUFFIX = "lists",
+		CHAR_LIMITS_SUFFIX = "charLimits",
 		JSON_SUFFIX = ".json",
 		DATABASE_URL = "https://test-project-bcd07.firebaseio.com/game-data";
 		//DATABASE_URL = "https://reignslike-prototype.firebaseio.com/game-data";
@@ -95,9 +110,9 @@ public class CMSManager : MonoBehaviour {
 	public void RegisterListElement(CMSInputField listElement) {
 		List<string> curList = listsHolder.GetList(listElement.SearchType);
 		listElement.SetSearchSpace(curList);
-		listElement.SetCharacterLimit(listsHolder.GetCharacterLimit(listElement.TextType));
+		listElement.SetCharacterLimit(charLimits.GetCharacterLimit(listElement.TextType));
 
-		if (listElement.GetType() == typeof(CMSInputField)) (listElement as CMSInputField).OnConfirmEntry += field => {
+		if (listElement.GetType() == typeof(CMSInputField)) listElement.OnConfirmEntry += field => {
 			if (!curList.Contains(field.Text)) { // Adding a new list entry
 				// TODO: Add confirmation dialog
 				listsHolder.AddEntry(field.SearchType, field.Text);
@@ -126,6 +141,7 @@ public class CMSManager : MonoBehaviour {
 	void Awake() {
 		decisionsURL = DATABASE_URL + "/" + DECISIONS_SUFFIX;
 		listsURL = DATABASE_URL + "/" + LISTS_SUFFIX;
+		charLimitsURL = DATABASE_URL + "/" + CHAR_LIMITS_SUFFIX;
 		Instance = this;
 
 		if (resetButton || resetLocalButton) try {
@@ -235,6 +251,7 @@ public class CMSManager : MonoBehaviour {
 			//Debug.LogError("Creating lists");
 			listsHolder = JsonUtility.FromJson<ListsHolder>(dataObj[LISTS_SUFFIX].ToString());
 			//Debug.LogError("Done");
+			charLimits = JsonUtility.FromJson<CMSCharacterLimits>(dataObj[CHAR_LIMITS_SUFFIX].ToString());
 
 			UpdateDecisionListUI();
 
