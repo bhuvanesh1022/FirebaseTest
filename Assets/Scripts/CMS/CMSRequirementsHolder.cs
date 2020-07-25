@@ -21,11 +21,7 @@ public class CMSRequirementsHolder : MonoBehaviour {
 		if (reqsLayoutSetup) {
 			reqsLayout = new CMSLayout<CMSRequirement>(reqsLayoutSetup, requirementPrefab);
 			reqsLayout.OnCellAddedOrRemoved += (req, wasAdded) => {
-				if (wasAdded) req.Initialize(new Requirement() {
-					check = new Property() {
-						type = PropertyType.STAT
-					}
-				});
+				if (wasAdded) req.Initialize();
 			};
 		}
 

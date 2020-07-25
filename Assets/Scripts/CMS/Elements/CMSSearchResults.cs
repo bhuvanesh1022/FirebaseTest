@@ -8,6 +8,7 @@ using UnityEngine.EventSystems;
 public class CMSSearchResults : MonoBehaviour {
 	[SerializeField] Button resultPrefab;
 	[SerializeField] LayoutGroup resultsLayout;
+	[SerializeField] MaskableGraphic listBG;
 	[SerializeField] GameObject noResultsPrompt;
 
 	public delegate void ResultSelectedEvent(string selection);
@@ -60,7 +61,7 @@ public class CMSSearchResults : MonoBehaviour {
 		}
 	}
 	
-	[SerializeField] List<string> resultsSpace = new List<string>();
+	List<string> resultsSpace = new List<string>();
 	List<Result> curResults = new List<Result>();
 	int _highlightIndex = -1;
 
@@ -86,12 +87,16 @@ public class CMSSearchResults : MonoBehaviour {
 	}
 
 	private void Awake() {
-		CMSManager.OnCMSInput += OnInput;
 		ShowNoResultsPrompt = false;
+		if (listBG) listBG.enabled = false;
 	}
 
-	private void OnDestroy() {
-		CMSManager.OnCMSInput -= OnInput;
+	private void OnEnable() {
+		CMSManager.Instance.OnCMSInput += OnInput;
+	}
+
+	private void OnDisable() {
+		CMSManager.Instance.OnCMSInput -= OnInput;
 	}
 
 	public void Initialize(List<string> results = null) {
@@ -109,6 +114,7 @@ public class CMSSearchResults : MonoBehaviour {
 		ClearResults();
 		List<string> curResultStrings = string.IsNullOrEmpty(text) ? resultsSpace : resultsSpace.FindAll(result => result.Contains(text));
 		ShowNoResultsPrompt = curResultStrings.Count == 0;
+		if (listBG) listBG.enabled = curResultStrings.Count > 0;
 		curResultStrings.ForEach(opt => {
 			Result newRes = Instantiate(resultPrefab, resultsLayout.transform).gameObject.AddComponent<Result>();
 			curResults.Add(newRes);
@@ -128,6 +134,7 @@ public class CMSSearchResults : MonoBehaviour {
 		});
 		curResults.Clear();
 		ShowNoResultsPrompt = false;
+		if (listBG) listBG.enabled = false;
 	}
 
 	void OnInput(CMSKeypress input) {
@@ -140,9 +147,9 @@ public class CMSSearchResults : MonoBehaviour {
 			if (HighlightIndex > 0) HighlightIndex--;
 			else HighlightIndex = curResults.Count - 1;
 			break;
-		//case CMSInputType.CONFIRM:
-		//	HighlightedResult.Select();
-		//	break;
+		case CMSKeypress.CONFIRM:
+			HighlightedResult.Select();
+			break;
 		default:
 			break;
 		}

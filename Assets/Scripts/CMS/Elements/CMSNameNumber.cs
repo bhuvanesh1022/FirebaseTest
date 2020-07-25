@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 
 public class CMSNameNumber : CMSLayoutElement {
-	[SerializeField] CMSInputField nameField;
+	[SerializeField] CMSInputBase nameField;
 	[SerializeField] TMP_Text numText;
 	[SerializeField] Button upButton, downButton;
 	[SerializeField] int changeBy = 1;
@@ -25,7 +25,11 @@ public class CMSNameNumber : CMSLayoutElement {
 		if (downButton) downButton.onClick.AddListener(() => ValueUpDown(false));
 	}
 
-	public void Initialize(string startText = "", int startNum = 1) {
+	public override void Initialize() {
+		Initialize("", 1);
+	}
+
+	public void Initialize(string startText, int startNum) {
 		nameField.Initialize(startText);
 		Number = startNum;
 		UpdateNumText();

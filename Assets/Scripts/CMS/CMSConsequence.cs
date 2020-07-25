@@ -1,13 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
 using DecisionFramework;
 
 public class CMSConsequence : CMSLayoutElement {
-	[SerializeField] CMSLayoutSetup statEffectsGridSetup;
+	[SerializeField] CMSLayoutSetup statEffectsSetup;
 	[SerializeField] CMSNameNumber statEffectPrefab, statEffect;
-	[SerializeField] CMSInputField effectTextField;
+	[SerializeField] CMSInputBase effectTextField;
+	[SerializeField] CMSImageReference image;
 
 	public Consequence Consequence { get; private set; }
 
@@ -15,14 +15,20 @@ public class CMSConsequence : CMSLayoutElement {
 
 	protected override void Awake() {
 		base.Awake();
-		if (statEffectsGridSetup) statEffectsLayout = new CMSLayout<CMSNameNumber>(statEffectsGridSetup, statEffectPrefab);
+		if (statEffectsSetup && statEffectPrefab) statEffectsLayout = new CMSLayout<CMSNameNumber>(statEffectsSetup, statEffectPrefab);
 	}
 
-	public void Initialize(Consequence cons = null) {
+	public override void Initialize() {
+		Initialize(null);
+	}
+
+	public void Initialize(Consequence cons) {
 		Consequence = cons ?? new Consequence() { statEffects = new List<Property>() { new Property() { type = PropertyType.STAT } } };
 		effectTextField.Initialize(Consequence.consequenceText);
+		image.Initialize(Consequence.consequenceImage);
 		for (int c = 0; c < Consequence.statEffects.Count; c++) {
 			Property effect = Consequence.statEffects[c];
+			// We're just using the first stat effect for now, hence this hack
 			if (c == 0) statEffect.Initialize(effect.name, effect.value);
 			else if (statEffectsLayout == null) break;
 			else statEffectsLayout.Add().Initialize(effect.name, effect.value);
@@ -31,6 +37,10 @@ public class CMSConsequence : CMSLayoutElement {
 
 	public void Refresh() {
 		Consequence.consequenceText = effectTextField.Text;
+
+		image.Refresh();
+		Consequence.consequenceImage = image.ImageReference;
+
 		Consequence.statEffects.Clear();
 		Consequence.statEffects.Add(new Property() {
 			name = statEffect.Name, type = PropertyType.STAT, value = statEffect.Number

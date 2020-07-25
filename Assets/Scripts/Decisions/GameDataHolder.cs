@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace DecisionFramework {
-	[CreateAssetMenu(fileName = "Decisions", menuName = "Reignslike/Decisions")]
-	public class DecisionsHolder : ScriptableObject {
+	[System.Serializable]
+	public class GameDataHolder {
 		public List<Decision> decisions;
-		public ArtHolder arts;
+		public ImagesHolder arts;
 		public ListsHolder lists;
 
 		public Decision this[int i] {
@@ -15,33 +15,32 @@ namespace DecisionFramework {
 	}
 
 	[System.Serializable]
-	public class ArtHolder {
-		static ArtHolder instance = null;
-		static Dictionary<string, Sprite> artNameMap = null;
+	public class ImagesHolder {
+		static ImagesHolder instance = null;
+		static Dictionary<string, Sprite> imageNameMap = null;
 
 		[System.Serializable]
-		class ArtLookup {
+		class ImageLookup {
 			public string name;
 			public Sprite sprite;
 		}
 
-		[SerializeField] List<ArtLookup> artLookup;
+		[SerializeField] List<ImageLookup> artLookup;
 
-		public ArtHolder() {
+		public ImagesHolder() {
 			instance = this;
 		}
 
 		public static Sprite GetSprite(string artName) {
-			if (artNameMap == null) {
+			if (imageNameMap == null) {
 				if (instance == null) return null;
-				artNameMap = new Dictionary<string, Sprite>();
-				instance.artLookup.ForEach(art => artNameMap[art.name] = art.sprite);
+				imageNameMap = new Dictionary<string, Sprite>();
+				instance.artLookup.ForEach(art => imageNameMap[art.name] = art.sprite);
 			}
-			return artNameMap.ContainsKey(artName) ? artNameMap[artName] : null;
+			return imageNameMap.ContainsKey(artName) ? imageNameMap[artName] : null;
 		}
 	}
 
-	
 	public enum ListType { NONE, ATTRIBUTE, SPEAKER, STAT, FLAG }
 
 	[System.Serializable]
@@ -49,12 +48,14 @@ namespace DecisionFramework {
 		[SerializeField] List<Attribute> attributes;
 		[SerializeField] List<string> stats, speakers, flags;
 
+		public bool HasChanged { get; set; } = false;
+
 		List<string> attributeNames = new List<string>();
 
 		public List<string> GetList(ListType type) {
 			switch (type) {
 			case ListType.ATTRIBUTE:
-				if (attributeNames.Count==0) attributes.ForEach(att => attributeNames.Add(att.name));
+				if (attributeNames.Count == 0) attributes.ForEach(att => attributeNames.Add(att.name));
 				return attributeNames;
 			case ListType.SPEAKER:
 				return speakers;
@@ -68,18 +69,23 @@ namespace DecisionFramework {
 		}
 
 		public void AddEntry(ListType type, string entry) {
+			if (string.IsNullOrEmpty(entry)) return;
 			switch (type) {
 			case ListType.ATTRIBUTE:
 				if (!attributeNames.Contains(entry)) {
 					attributes.Add(new Attribute() { name = entry });
 					attributeNames.Add(entry);
+					HasChanged = true;
 				}
 				break;
 			case ListType.STAT:
 			case ListType.SPEAKER:
 			case ListType.FLAG:
 				List<string> list = GetList(type);
-				if (!list.Contains(entry)) list.Add(entry);
+				if (!list.Contains(entry)) {
+					list.Add(entry);
+					HasChanged = true;
+				}
 				break;
 			default:
 				break;

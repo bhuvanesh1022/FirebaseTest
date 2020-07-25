@@ -51,8 +51,14 @@ public class CMSRequirement : CMSLayoutElement {
 		propOptions.ForEach(po => propOptionsMap[po.type] = po.nameSelectPrefab);
 	}
 
+	public override void Initialize() {
+		Initialize(null);
+	}
+
 	public void Initialize(Requirement req) {
-		Requirement = req;
+		Requirement = req ?? new Requirement() {
+			check = new Property() { type = PropertyType.STAT }
+		};
 		UpdateCheckType();
 	}
 
@@ -64,6 +70,8 @@ public class CMSRequirement : CMSLayoutElement {
 			curPropNameSelect = Instantiate(propOptionsMap[newType], propSelectParent);
 			curPropNameSelect.Initialize(Requirement.check.name);
 		}
+
+		propTypeMenu.SetValueWithoutNotify(propOptions.FindIndex(po => po.type == newType));
 
 		switch (newType) {
 		case PropertyType.FLAG:
@@ -105,11 +113,9 @@ public class CMSRequirement : CMSLayoutElement {
 	}
 
 	public void Refresh() {
-		Requirement.check = new Property() {
-			name = curPropNameSelect.Text,
-			type = propOptions[propTypeMenu.value].type,
-			value = int.Parse(valueField.text)
-		};
+		Requirement.check.name = curPropNameSelect.Text;
+		Requirement.check.type = propOptions[propTypeMenu.value].type;
+		int.TryParse(valueField.text, out Requirement.check.value);
 		Requirement.checkType = checkTypeLookup[checkTypeMenu.value];
 	}
 }

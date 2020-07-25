@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 using TMPro;
 
 [RequireComponent(typeof(TMP_InputField))]
-public class CMSInputText : CMSInputField {
+public class CMSInputText : CMSInputBase {
 	[SerializeField] CMSSearchResults searchResults;
 	[SerializeField] TMP_Text charLimitDisplay;
 	[SerializeField] bool enforceCharacterLimit = false;
@@ -27,7 +27,7 @@ public class CMSInputText : CMSInputField {
 			if (searchResults && !string.IsNullOrEmpty(searchResults.CurResult)) inputField.text = searchResults.CurResult;
 			OnFocusLost();
 		});
-		inputField.onDeselect.AddListener(_ => Invoke("OnFocusLost", 0.1f));
+		inputField.onDeselect.AddListener(_ => StartCoroutine(OnFocusLostCR()));
 		if (searchResults) searchResults.OnResultSelected += text => inputField.text = text;
 		if (charLimitDisplay) {
 			charLimitDisplay.gameObject.SetActive(false);
@@ -64,6 +64,12 @@ public class CMSInputText : CMSInputField {
 					charLimitDisplay.fontSharedMaterial = isOverLimit ? overLimitMaterial : underLimitMaterial;
 			}
 		}
+	}
+
+	IEnumerator OnFocusLostCR() {
+		yield return null;
+		yield return null;
+		OnFocusLost();
 	}
 
 	void OnFocusLost() {

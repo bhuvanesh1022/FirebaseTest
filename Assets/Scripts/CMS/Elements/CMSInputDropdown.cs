@@ -4,7 +4,7 @@ using UnityEngine;
 using TMPro;
 
 [RequireComponent(typeof(TMP_Dropdown))]
-public class CMSInputDropdown : CMSInputField {
+public class CMSInputDropdown : CMSInputBase {
 	[SerializeField] string addOptionText;
 
 	public override string Text { get => dropdown.options[dropdown.value].text; }

@@ -8,7 +8,8 @@ using System;
 namespace DecisionFramework {
 	[System.Serializable]
 	public class Decision {
-		public string decisionText, speakerName, imageID;
+		public string decisionText, speakerName;
+		public ImageReference decisionImage = new ImageReference();
 		public List<Choice> choices = new List<Choice>(); // { new Choice(), new Choice() };
 		public List<Requirement> requirements = new List<Requirement>();
 	}
@@ -18,6 +19,7 @@ namespace DecisionFramework {
 		public string choiceText;
 		public List<Property> attributeEffects = new List<Property>();
 		public List<Consequence> consequences = new List<Consequence>();
+		public List<UnlockEffect> unlocks = new List<UnlockEffect>();
 	}
 
 	[System.Serializable]
@@ -57,7 +59,8 @@ namespace DecisionFramework {
 	[System.Serializable]
 	public class Consequence {
 		public List<Property> statEffects = new List<Property>();
-		public string consequenceText = string.Empty, artDescription = string.Empty; // Also doodle
+		public string consequenceText = string.Empty;
+		public ImageReference consequenceImage = new ImageReference();
 	}
 
 	[System.Serializable]
@@ -65,6 +68,12 @@ namespace DecisionFramework {
 		public Property check;
 		public enum CheckType { PRESENT, ABSENT, EQUALS, LESS_THAN, GREATER_THAN }
 		public CheckType checkType;
+	}
+
+	[System.Serializable]
+	public class UnlockEffect {
+		public Property property;
+		public bool doUnlock;
 	}
 
 	[System.Serializable]
@@ -93,9 +102,8 @@ namespace DecisionFramework {
 	}
 
 	[System.Serializable]
-	public class ArtPiece {
-		public string artDescription, artFilename;
-		[NonSerialized] public Sprite sprite;
+	public class ImageReference {
+		public string description, filename;
 	}
 
 	[System.Serializable]

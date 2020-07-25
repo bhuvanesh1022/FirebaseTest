@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DecisionFramework;
-using TMPro;
 
 public class CMSDecision : MonoBehaviour {
-	[SerializeField] CMSInputField decisionTextField, speakerField;
+	[SerializeField] CMSInputBase decisionTextField, speakerField;
+	[SerializeField] CMSImageReference image;
 	[SerializeField] CMSRequirementsHolder requirements;
-	[SerializeField] CMSLayoutSetup choicesLayoutSetup;
+	[SerializeField] CMSLayoutSetup choicesSetup;
 	[SerializeField] CMSChoice choicePrefab;
 
 	public Decision Decision { get; private set; }
@@ -15,8 +15,8 @@ public class CMSDecision : MonoBehaviour {
 	CMSLayout<CMSChoice> choicesLayout;
 
 	private void Awake() {
-		if (choicesLayoutSetup) {
-			choicesLayout = new CMSLayout<CMSChoice>(choicesLayoutSetup, choicePrefab);
+		if (choicesSetup) {
+			choicesLayout = new CMSLayout<CMSChoice>(choicesSetup, choicePrefab);
 			choicesLayout.OnCellAddedOrRemoved += ChoiceAddedOrRemoved;
 		}
 
@@ -28,6 +28,7 @@ public class CMSDecision : MonoBehaviour {
 		Decision = dec ?? new Decision();
 		decisionTextField.Initialize(Decision.decisionText);
 		speakerField.Initialize(Decision.speakerName);
+		image.Initialize(dec.decisionImage);
 		requirements.Initialize(dec.requirements);
 		choicesLayout.Clear();
 		for (int c = 0; c < Decision.choices.Count; c++) choicesLayout.Add().Initialize(Decision.choices[c]);
@@ -48,12 +49,15 @@ public class CMSDecision : MonoBehaviour {
 		Decision.decisionText = decisionTextField.Text;
 		Decision.speakerName = speakerField.Text;
 
+		image.Refresh();
+		Decision.decisionImage = image.ImageReference;
+
 		requirements.Refresh();
 		Decision.requirements = requirements.Requirements;
 
 		Decision.choices.Clear();
 		choicesLayout.Elements.ForEach(choice => {
-			choice.RefreshChoice();
+			choice.Refresh();
 			Decision.choices.Add(choice.Choice);
 		});
 	}

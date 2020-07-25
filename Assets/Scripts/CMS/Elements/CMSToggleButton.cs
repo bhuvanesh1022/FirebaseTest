@@ -14,7 +14,7 @@ public class CMSToggleButton : CMSLayoutElement {
 	public SelectedEvent OnSelected;
 
 	public Toggle Toggle { get; private set; }
-	public bool IsOn { get => Toggle.isOn; }
+	public bool isOn { get => Toggle.isOn; set => Toggle.isOn = value; }
 	
 	Animator anim;
 	

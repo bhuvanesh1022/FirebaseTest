@@ -12,6 +12,8 @@ public abstract class CMSLayoutElement : MonoBehaviour {
 	protected virtual void Awake() {
 		if (removeButton) removeButton.onClick.AddListener(() => OnRemove?.Invoke(this));
 	}
+
+	public virtual void Initialize() { }
 }
 
 public class CMSLayoutSetup : MonoBehaviour {

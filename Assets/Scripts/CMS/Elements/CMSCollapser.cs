@@ -11,7 +11,7 @@ public class CMSCollapser : MonoBehaviour {
 	public delegate void CollapseToggleEvent(bool isExpanded);
 	public CollapseToggleEvent OnCollapseToggle;
 
-	public bool IsExpanded { get => toggle.IsOn; }
+	public bool IsExpanded { get => toggle.isOn; }
 
 	CMSToggleButton toggle;
 	Vector3 fullScale, collapsedScale;

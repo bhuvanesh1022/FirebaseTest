@@ -6,7 +6,7 @@ using UnityEngine;
 public class CMSAnimatedActivatable : MonoBehaviour {
 	[SerializeField] string activeParam;
 	[SerializeField] float deactivateTime;
-	[SerializeField] bool startActive = true;
+	[SerializeField] bool startActive = true, hasDeactivateEvent = false;
 
 	public bool IsActive { get; private set; }
 
@@ -22,9 +22,13 @@ public class CMSAnimatedActivatable : MonoBehaviour {
 	public void SetActive(bool isActive) {
 		if (isActive == IsActive) return;
 		IsActive = isActive;
-		anim.SetBool(activeParam, IsActive);
 		if (IsActive) gameObject.SetActive(true);
-		else StartCoroutine(DeactivateCR());
+		else if (!hasDeactivateEvent) Deactivate();
+		anim.SetBool(activeParam, IsActive);
+	}
+
+	void Deactivate() {
+		StartCoroutine(DeactivateCR());
 	}
 
 	IEnumerator DeactivateCR() {

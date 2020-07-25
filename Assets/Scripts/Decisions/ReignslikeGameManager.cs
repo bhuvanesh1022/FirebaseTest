@@ -13,7 +13,7 @@ public class ReignslikeGameManager : MonoBehaviour {
     public user u;
     public string localID;
 
-	[SerializeField] DecisionsHolder decHolder;
+	[SerializeField] GameDataHolder decHolder;
 	[SerializeField] int turnsTotal, startingStat, minStat, maxStat;
 	[SerializeField] List<string> statNames;
 	[SerializeField] string endgameMessage = "THAT'S ALL FOLKS";
