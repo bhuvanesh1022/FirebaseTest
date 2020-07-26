@@ -7,7 +7,7 @@ using TMPro;
 public class CMSInputDropdown : CMSInputBase {
 	[SerializeField] string addOptionText;
 
-	public override string Text { get => dropdown.options[dropdown.value].text; }
+	public override string Text { get => dropdown.options.Count > 0 ? dropdown.options[dropdown.value].text : string.Empty; }
 
 	string oldText = string.Empty;
 	TMP_Dropdown dropdown;

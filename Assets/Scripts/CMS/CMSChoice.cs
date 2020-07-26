@@ -33,8 +33,6 @@ public class CMSChoice : CMSLayoutElement {
 		InitializeSetup(ref attributesLayout, attributePrefab, attributesSetup);
 		InitializeSetup(ref effectsLayout, effectPrefab, effectsSetup);
 		InitializeSetup(ref unlocksLayout, unlockPrefab, unlocksSetup);
-
-		//if (choiceTextField) choiceTextField.OnConfirmEntry += field => Choice.choiceText = field.Text;
 	}
 
 	public override void Initialize() {
@@ -71,7 +69,7 @@ public class CMSChoice : CMSLayoutElement {
 		Choice.unlocks.Clear();
 		unlocksLayout.Elements.ForEach(ul => {
 			ul.Refresh();
-			Choice.unlocks.Add(ul.Unlock);
+			if (!string.IsNullOrEmpty(ul.Unlock.property.name)) Choice.unlocks.Add(ul.Unlock);
 		});
 	}
 }

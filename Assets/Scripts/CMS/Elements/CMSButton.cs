@@ -9,7 +9,8 @@ public class CMSButton : MonoBehaviour {
 	[SerializeField] TMP_Text buttonText;
 	[SerializeField] Image buttonImage;
 	[SerializeField] bool showDialog;
-	[SerializeField] string dialogText;
+	[SerializeField] [Multiline] string dialogText;
+	[SerializeField] string confirmText = "Yes", cancelText = "No";
 
 	public string Text {
 		get { return buttonText ? buttonText.text : null; }
@@ -33,7 +34,7 @@ public class CMSButton : MonoBehaviour {
 		if (string.IsNullOrEmpty(dialogText)) dialogText = "<b>" + Text + "</b>\nAre you sure?";
 
 		if (showDialog && CMSManager.Instance.CommonDialog)
-			button.onClick.AddListener(() => CMSManager.Instance.CommonDialog.Show(dialogText, "Yes", "No", () => OnClick?.Invoke()));
+			button.onClick.AddListener(() => CMSManager.Instance.CommonDialog.Show(dialogText, confirmText, cancelText, () => OnClick?.Invoke()));
 		else
 			button.onClick.AddListener(() => OnClick?.Invoke());
 	}

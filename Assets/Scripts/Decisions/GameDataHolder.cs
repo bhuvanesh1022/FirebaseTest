@@ -45,8 +45,8 @@ namespace DecisionFramework {
 
 	[System.Serializable]
 	public class ListsHolder {
-		[SerializeField] List<Attribute> attributes;
-		[SerializeField] List<string> stats, speakers, flags;
+		[SerializeField] List<Attribute> attributes = new List<Attribute>();
+		[SerializeField] List<string> stats = new List<string>(), speakers = new List<string>(), flags = new List<string>();
 
 		public bool HasChanged { get; set; } = false;
 
@@ -69,7 +69,7 @@ namespace DecisionFramework {
 		}
 
 		public void AddEntry(ListType type, string entry) {
-			if (string.IsNullOrEmpty(entry)) return;
+			if (string.IsNullOrEmpty(entry.Trim())) return;
 			switch (type) {
 			case ListType.ATTRIBUTE:
 				if (!attributeNames.Contains(entry)) {

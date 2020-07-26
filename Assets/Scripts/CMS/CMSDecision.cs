@@ -19,9 +19,6 @@ public class CMSDecision : MonoBehaviour {
 			choicesLayout = new CMSLayout<CMSChoice>(choicesSetup, choicePrefab);
 			choicesLayout.OnCellAddedOrRemoved += ChoiceAddedOrRemoved;
 		}
-
-		//if (decisionTextField) decisionTextField.OnConfirmEntry += field => Decision.decisionText = field.Text;
-		//if (speakerField) speakerField.OnConfirmEntry += field => Decision.speakerName = field.Text;
 	}
 
 	public void Initialize(Decision dec = null) {
